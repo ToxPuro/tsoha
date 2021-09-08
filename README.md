@@ -8,12 +8,12 @@ There are many possible features for this app so it depends largely on the scope
 
 The main features would at least be:
 
-Users can make profiles, login and logout 
-Users can join different communities and create them
-Users can post text based threads on these communities
-Users can leave messages on these threads
-Communities have admins who have the right to take down threads, remove messages and ban users from entering these communities
-Users can upvote threads and messages which affects their visibility
+* Users can make profiles, login and logout 
+* Users can join different communities and create them
+* Users can post text based threads on these communities
+* Users can leave messages on these threads
+* Communities have admins who have the right to take down threads, remove messages and ban users from entering these communities
+* Users can upvote threads and messages which affects their visibility
 
 (If any instructors find the scope too narrow please inform me as soon as possible so I can plan more effectively future features)
 
