@@ -80,3 +80,9 @@ def create_a_thread():
         threads_service.create_a_thread(community_name,title, content)
         return redirect("/")
 
+@app.route("/thread/<int:thread_id>", methods=["GET", "POST"])
+def thread(thread_id):
+    thread = threads_service.get_thread(thread_id)
+    return render_template("thread.html", thread=thread)
+
+

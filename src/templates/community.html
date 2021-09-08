@@ -4,6 +4,6 @@
 <a href="/join/{{community.name}}" >Liity</a>
 {% endif %}
 {% for thread in threads %} 
-    {{thread.title}}
+    <a href="/thread/{{thread.id}}">{{thread.title}}</a>
 {% endfor %}
 

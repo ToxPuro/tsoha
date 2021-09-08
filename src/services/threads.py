@@ -11,4 +11,7 @@ class ThreadsService:
         community = self._communities_repository.get_community(community_name)
         self._threads_repository.create_a_thread(community.id, title, content)
 
+    def get_thread(self, thread_id):
+        return self._threads_repository.get_thread(thread_id)
+
 threads_service = ThreadsService()

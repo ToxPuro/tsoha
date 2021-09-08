@@ -15,4 +15,9 @@ class ThreadsRepository:
         result = db.session.execute(sql, {"community_name": community_name })
         return result.fetchall()
 
+    def get_thread(self, thread_id):
+        sql = "SELECT * from threads WHERE threads.id = :thread_id"
+        result = db.session.execute(sql, {"thread_id": thread_id})
+        return result.fetchone()
+
 threads_repository = ThreadsRepository()
