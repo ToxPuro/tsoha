@@ -29,4 +29,9 @@ class CommunitiesRepository:
         db.session.execute(sql, {"community_id": community_id, "user_id": user_id})
         db.session.commit()
 
+    def add_admin(self, community_id, user_id):
+        sql = "UPDATE community_users SET admin=TRUE WHERE community_users.community_id=:community_id AND community_users.user_id = :user_id"
+        db.session.execute(sql, {"community_id": community_id, "user_id": user_id})
+        db.session.commit()
+
 communities_repository = CommunitiesRepository()

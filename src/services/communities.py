@@ -9,8 +9,10 @@ class CommunitiesService:
         self._communities_repository = communities_repository
         self._users_repository = users_repository
 
-    def create_community(self, name, description):
+    def create_community(self, name, description, username):
         self._communities_repository.create_community(name, description)
+        self.join_community(name, username)
+        self.add_admin(name, username)
 
     def get_communities_user_not_in(self,username):
         return self._communities_repository.get_communities_user_not_in(username)
@@ -25,5 +27,10 @@ class CommunitiesService:
         community = self.get_community(community_name)
         user = self._users_repository.get_user_by_name(username)
         self._communities_repository.join_community(community.id, user.id)
+
+    def add_admin(self, community_name, username):
+        community = self.get_community(community_name)
+        user = self._users_repository.get_user_by_name(username)
+        self._communities_repository.add_admin(community.id, user.id)
 
 communities_service = CommunitiesService()

@@ -52,7 +52,7 @@ def create_community():
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
-        communities_service.create_community(name, description)
+        communities_service.create_community(name, description, session["username"])
         return redirect("/")
 
 @app.route("/community/<community_name>")
