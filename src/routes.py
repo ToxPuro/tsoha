@@ -3,6 +3,7 @@ from flask import redirect, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from services.users import users_service
 from services.communities import communities_service
+from services.threads import threads_service
 from app import app
 from db import db
 
@@ -65,3 +66,16 @@ def community(community_name):
 def join(community_name):
     communities_service.join_community(community_name, session["username"])
     return redirect("/")
+
+@app.route("/create_a_thread", methods=["GET", "POST"])
+def create_a_thread():
+    if request.method == "GET":
+        communities = communities_service.get_communities_user_in(session["username"])
+        return render_template("create_a_thread.html", communities=communities)
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+        community_name = request.form["community_name"]
+        threads_service.create_a_thread(community_name,title, content)
+        return redirect("/")
+
