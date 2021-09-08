@@ -24,4 +24,9 @@ class CommunitiesRepository:
         result = db.session.execute(sql, {"community_name": community_name})
         return result.fetchone()
 
+    def join_community(self, community_id, user_id):
+        sql = "INSERT INTO community_users (community_id, user_id) VALUES (:community_id, :user_id)"
+        db.session.execute(sql, {"community_id": community_id, "user_id": user_id})
+        db.session.commit()
+
 communities_repository = CommunitiesRepository()

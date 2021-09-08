@@ -58,7 +58,10 @@ def create_community():
 @app.route("/community/<community_name>")
 def community(community_name):
     community = communities_service.get_community(community_name)
-    print(community)
     user_in = community in communities_service.get_communities_user_not_in(session["username"])
     return render_template("community.html", community=community)
 
+@app.route("/join/<community_name>")
+def join(community_name):
+    communities_service.join_community(community_name, session["username"])
+    return redirect("/")
