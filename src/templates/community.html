@@ -1,1 +1,6 @@
 <p>{{community.name}}</p>
+{%if user_in %}
+{% else %}
+<a href="/join/{{community.name}}" >Liity</a>
+{% endif %}
+

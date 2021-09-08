@@ -9,8 +9,9 @@ from db import db
 
 @app.route("/")
 def index():
-    if session["username"]:
-        return redirect("/homepage")
+    if session:
+        if session["username"]:
+            return redirect("/homepage")
     return render_template("index.html")
 
 @app.route("/homepage")
@@ -57,5 +58,7 @@ def create_community():
 @app.route("/community/<community_name>")
 def community(community_name):
     community = communities_service.get_community(community_name)
+    print(community)
+    user_in = community in communities_service.get_communities_user_not_in(session["username"])
     return render_template("community.html", community=community)
 
