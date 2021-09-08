@@ -2,9 +2,9 @@
 
 <p>{{thread.content}}</p>
 
-<p>{{votes}}</p>
+<p>{{thread.votes}}</p>
 
-<p>{{user_vote}}</p>
+<p>{{thread.user_vote}}</p>
 
 <a href="/upvote/{{thread.id}}">Peukuta</a>
 
@@ -17,4 +17,7 @@
 
 {% for message in messages %} 
     {{message.content}}
+    {{message.votes}}
+    <a href="/upvote/message/{{thread.id}}/{{message.id}}">Peukuta</a>
+    <a href="/downvote/message/{{thread.id}}/{{message.id}}">Downvote</a>
 {% endfor %}

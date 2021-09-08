@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from services.users import users_service
 from services.communities import communities_service
 from services.threads import threads_service
+from services.messages import messages_service
 from app import app
 from db import db
 
@@ -82,11 +83,9 @@ def create_a_thread():
 
 @app.route("/thread/<int:thread_id>", methods=["GET", "POST"])
 def thread(thread_id):
-    thread = threads_service.get_thread(thread_id)
-    messages = threads_service.get_messages(thread_id)
-    votes = threads_service.get_votes(thread_id)
-    user_vote = users_service.get_thread_vote(session["username"], thread_id)
-    return render_template("thread.html", thread=thread, messages=messages, votes=votes, user_vote=user_vote)
+    thread = threads_service.get_thread(thread_id, session["username"])
+    messages = threads_service.get_messages(thread_id, session["username"])
+    return render_template("thread.html", thread=thread, messages=messages)
 
 @app.route("/message/<int:thread_id>", methods=["POST"])
 def message(thread_id):
@@ -105,6 +104,18 @@ def upvote(thread_id):
 def downvote(thread_id):
     user = users_service.get_user_by_name(session["username"])
     threads_service.downvote(thread_id, user.id)
+    return redirect(f"/thread/{thread_id}")
+
+@app.route("/upvote/message/<int:thread_id>/<int:message_id>", methods=["GET"])
+def upvote_message(thread_id, message_id):
+    user = users_service.get_user_by_name(session["username"])
+    messages_service.upvote(message_id, user.id)
+    return redirect(f"/thread/{thread_id}")
+
+@app.route("/downvote/message/<int:thread_id>/<int:message_id>", methods=["GET"])
+def downvote_message(thread_id, message_id):
+    user = users_service.get_user_by_name(session["username"])
+    messages_service.downvote(message_id, user.id)
     return redirect(f"/thread/{thread_id}")
 
 

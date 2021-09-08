@@ -15,13 +15,13 @@ class ThreadsRepository:
         result = db.session.execute(sql, {"community_name": community_name })
         return result.fetchall()
 
-    def get_thread(self, thread_id):
-        sql = "SELECT * from threads WHERE threads.id = :thread_id"
-        result = db.session.execute(sql, {"thread_id": thread_id})
+    def get_thread(self, thread_id, user_id):
+        sql = "SELECT *,id, COALESCE((SELECT SUM(vote)  AS votes FROM threads_to_users WHERE threads_to_users.thread_id = id),0), COALESCE((SELECT vote from threads_to_users WHERE threads_to_users.user_id = :user_id AND threads_to_users.thread_id = id LIMIT 1),0) AS user_vote from threads WHERE threads.id = :thread_id"
+        result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
         return result.fetchone()
 
-    def get_messages(self, thread_id):
-        sql = "SELECT * from thread_messages WHERE thread_messages.thread_id = :thread_id"
+    def get_messages(self, thread_id, user_id):
+        sql = "SELECT content, id, COALESCE((SELECT SUM(vote) FROM messages_to_users WHERE messages_to_users.message_id=id),0) AS votes from thread_messages WHERE thread_messages.thread_id = :thread_id"
         result = db.session.execute(sql, {"thread_id": thread_id})
         return result.fetchall()
 
@@ -30,17 +30,14 @@ class ThreadsRepository:
         db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id, "content": content})
         db.session.commit()
 
-    def get_votes(self, thread_id):
-        sql = "SELECT SUM(vote) AS votes FROM threads_to_users WHERE threads_to_users.thread_id = :thread_id"
-        result = db.session.execute(sql, {"thread_id": thread_id})
-        return result.fetchone()
-
     def upvote(self, thread_id, user_id):
+        self.check_that_vote_exists(thread_id, user_id)
         sql = "UPDATE threads_to_users SET vote=1 WHERE threads_to_users.user_id=:user_id AND threads_to_users.thread_id = :thread_id"
         db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
         db.session.commit()
 
     def downvote(self, thread_id, user_id):
+        self.check_that_vote_exists(thread_id, user_id)
         sql = "UPDATE threads_to_users SET vote=-1 WHERE threads_to_users.user_id=:user_id AND threads_to_users.thread_id = :thread_id"
         db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
         db.session.commit()
