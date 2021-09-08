@@ -24,4 +24,8 @@ class UsersService:
         hash_value = generate_password_hash(password)
         self._users_repository.create_user(username, hash_value)
 
+    def get_thread_vote(self, username, thread_id):
+        user = self.get_user_by_name(username)
+        return self._users_repository.get_thread_vote(user.id, thread_id).vote
+
 users_service = UsersService()

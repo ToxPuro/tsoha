@@ -2,6 +2,14 @@
 
 <p>{{thread.content}}</p>
 
+<p>{{votes}}</p>
+
+<p>{{user_vote}}</p>
+
+<a href="/upvote/{{thread.id}}">Peukuta</a>
+
+<a href="/downvote/{{thread.id}}">Downvote</a>
+
 <form action="/message/{{thread.id}}" method="POST">
     <input type="text" name="content"></p>
     <input type="submit" value="Lisää kommentti">

@@ -20,4 +20,17 @@ class ThreadsService:
     def add_message(self, thread_id, user_id, content):
         self._threads_repository.add_message(thread_id, user_id, content)
 
+    def get_votes(self, thread_id):
+        votes = self._threads_repository.get_votes(thread_id).votes
+        if votes == None:
+            return 0
+        return votes
+
+    def upvote(self, thread_id, user_id):
+        self._threads_repository.upvote(thread_id, user_id)
+
+    
+    def downvote(self, thread_id, user_id):
+        self._threads_repository.downvote(thread_id, user_id)
+
 threads_service = ThreadsService()

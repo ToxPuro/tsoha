@@ -30,4 +30,28 @@ class ThreadsRepository:
         db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id, "content": content})
         db.session.commit()
 
+    def get_votes(self, thread_id):
+        sql = "SELECT SUM(vote) AS votes FROM threads_to_users WHERE threads_to_users.thread_id = :thread_id"
+        result = db.session.execute(sql, {"thread_id": thread_id})
+        return result.fetchone()
+
+    def upvote(self, thread_id, user_id):
+        sql = "UPDATE threads_to_users SET vote=1 WHERE threads_to_users.user_id=:user_id AND threads_to_users.thread_id = :thread_id"
+        db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
+        db.session.commit()
+
+    def downvote(self, thread_id, user_id):
+        sql = "UPDATE threads_to_users SET vote=-1 WHERE threads_to_users.user_id=:user_id AND threads_to_users.thread_id = :thread_id"
+        db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
+        db.session.commit()
+
+    def check_that_vote_exists(self, thread_id, user_id):
+        sql = "SELECT user_id FROM threads_to_users WHERE thread_id=:thread_id AND user_id=:user_id"
+        result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
+        if result.fetchone() == None:
+            sql = "INSERT INTO threads_to_users (user_id, thread_id, vote) VALUES (:user_id, :thread_id, 0)"
+            db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
+            db.session.commit()
+
+
 threads_repository = ThreadsRepository()
