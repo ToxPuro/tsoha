@@ -14,4 +14,10 @@ class ThreadsService:
     def get_thread(self, thread_id):
         return self._threads_repository.get_thread(thread_id)
 
+    def get_messages(self, thread_id):
+        return self._threads_repository.get_messages(thread_id)
+
+    def add_message(self, thread_id, user_id, content):
+        self._threads_repository.add_message(thread_id, user_id, content)
+
 threads_service = ThreadsService()

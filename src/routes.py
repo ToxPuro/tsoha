@@ -83,6 +83,15 @@ def create_a_thread():
 @app.route("/thread/<int:thread_id>", methods=["GET", "POST"])
 def thread(thread_id):
     thread = threads_service.get_thread(thread_id)
-    return render_template("thread.html", thread=thread)
+    messages = threads_service.get_messages(thread_id)
+    return render_template("thread.html", thread=thread, messages=messages)
+
+@app.route("/message/<int:thread_id>", methods=["POST"])
+def message(thread_id):
+    content = request.form["content"]
+    user = users_service.get_user_by_name(session["username"])
+    threads_service.add_message(thread_id, user.id, content)
+    return redirect(f"/thread/{thread_id}")
+
 
 

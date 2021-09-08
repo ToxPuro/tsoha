@@ -8,11 +8,8 @@ class UsersService:
     def __init__(self,users_repository=default_users_repository):
         self._users_repository = users_repository
 
-    def get_tags(self):
-        if self._login_service.is_authenticated():
-            return self._tag_repository.get_tags(self._login_service.current_user())
-        else:
-            return []
+    def get_user_by_name(self, username):
+        return self._users_repository.get_user_by_name(username)
 
     def login(self, username, password):
         user = self._users_repository.get_user_by_name(username)

@@ -1,1 +1,12 @@
-<p>{{thread.title}}</p>
+<h1>{{thread.title}}</h1>
+
+<p>{{thread.content}}</p>
+
+<form action="/message/{{thread.id}}" method="POST">
+    <input type="text" name="content"></p>
+    <input type="submit" value="Lisää kommentti">
+</form>
+
+{% for message in messages %} 
+    {{message.content}}
+{% endfor %}

@@ -20,4 +20,14 @@ class ThreadsRepository:
         result = db.session.execute(sql, {"thread_id": thread_id})
         return result.fetchone()
 
+    def get_messages(self, thread_id):
+        sql = "SELECT * from thread_messages WHERE thread_messages.thread_id = :thread_id"
+        result = db.session.execute(sql, {"thread_id": thread_id})
+        return result.fetchall()
+
+    def add_message(self, thread_id, user_id, content):
+        sql = "INSERT INTO thread_messages (thread_id, user_id, content) VALUES (:thread_id, :user_id, :content)"
+        db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id, "content": content})
+        db.session.commit()
+
 threads_repository = ThreadsRepository()
