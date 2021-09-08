@@ -9,7 +9,7 @@
 {% endfor %}
 <hr>
 {% for community in communities_user_in %}
-{{ community.name}}
+<a href="/community/{{community.name}}" >{{community.name}}</a>
 <hr>
 
 {% endfor %}
