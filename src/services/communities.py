@@ -14,4 +14,7 @@ class CommunitiesService:
     def get_communities_user_in(self,username):
         return self._communities_repository.get_communities_user_in(username)
 
+    def get_community(self, community_name):
+        return self._communities_repository.get_community(community_name)
+
 communities_service = CommunitiesService()

@@ -52,5 +52,10 @@ def create_community():
         name = request.form["name"]
         description = request.form["description"]
         communities_service.create_community(name, description)
-        return render_template("/")
+        return redirect("/")
+
+@app.route("/community/<community_name>")
+def community(community_name):
+    community = communities_service.get_community(community_name)
+    return render_template("community.html", community=community)
 

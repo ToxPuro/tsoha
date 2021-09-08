@@ -2,12 +2,13 @@
 <a href="/create_community">Luo uusi ryhmä</a>
 <a href="/logout">Kirjaudu ulos</a>
 <hr>
-{% for communities in communities_user_not_in %}
-{{ communities.name}}
+{% for community in communities_user_not_in %}
+<a href="/community/{{community.name}}" >{{community.name}}</a>
 <hr>
+{% endfor %}
 <hr>
-{% for communities in communities_user_in %}
-{{ communities.name}}
+{% for community in communities_user_in %}
+{{ community.name}}
 <hr>
 
 {% endfor %}

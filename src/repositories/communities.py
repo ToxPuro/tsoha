@@ -19,4 +19,9 @@ class CommunitiesRepository:
         result = db.session.execute(sql, {"username": username})
         return result.fetchall()
 
+    def get_community(self, community_name):
+        sql = "SELECT * from communities WHERE communities.name = :community_name"
+        result = db.session.execute(sql, {"community_name": community_name})
+        return result.fetchone()
+
 communities_repository = CommunitiesRepository()
