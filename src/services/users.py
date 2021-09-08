@@ -15,9 +15,7 @@ class UsersService:
             return []
 
     def login(self, username, password):
-        sql = "SELECT id, password FROM users WHERE username=:username"
-        result = db.session.execute(sql, {"username":username})
-        user = result.fetchone()    
+        user = self._users_repository.get_user_by_name(username)
         if user:
             hash_value = user.password
             if check_password_hash(hash_value, password):
