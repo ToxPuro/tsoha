@@ -2,6 +2,7 @@ from flask import Flask
 from flask import redirect, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from services.users import users_service
+from services.communities import communities_service
 from app import app
 from db import db
 
@@ -41,5 +42,7 @@ def create_community():
         return render_template("create_community.html")
     if request.method == "POST":
         name = request.form["name"]
-        communities_service.create_community(name)
+        description = request.form["description"]
+        communities_service.create_community(name, description)
+        return render_template("/")
 
