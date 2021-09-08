@@ -10,5 +10,8 @@ class CommunitiesService:
 
     def get_communities_user_not_in(self,username):
         return self._communities_repository.get_communities_user_not_in(username)
+    
+    def get_communities_user_in(self,username):
+        return self._communities_repository.get_communities_user_in(username)
 
 communities_service = CommunitiesService()

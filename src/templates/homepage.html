@@ -5,4 +5,9 @@
 {% for communities in communities_user_not_in %}
 {{ communities.name}}
 <hr>
+<hr>
+{% for communities in communities_user_in %}
+{{ communities.name}}
+<hr>
+
 {% endfor %}
