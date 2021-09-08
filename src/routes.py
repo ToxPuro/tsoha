@@ -9,7 +9,15 @@ from db import db
 
 @app.route("/")
 def index():
+    if session["username"]:
+        return redirect("/homepage")
     return render_template("index.html")
+
+@app.route("/homepage")
+def homepage():
+    communities_user_not_in = communities_service.get_communities_user_not_in(session["username"])
+    print(communities_user_not_in)
+    return render_template("homepage.html", communities_user_not_in=communities_user_not_in)
 
 @app.route("/login",methods=["POST"])
 def login():
