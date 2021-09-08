@@ -23,4 +23,8 @@ class UsersService:
         
         return False
 
+    def create_user(self, username, password):
+        hash_value = generate_password_hash(password)
+        self._users_repository.create_user(username, hash_value)
+
 users_service = UsersService()

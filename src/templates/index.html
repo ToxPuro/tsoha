@@ -1,5 +1,6 @@
 {% if session.username %}
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
+<a href="create_community">Luo uusi ryhmä</a>
 <a href="/logout">Kirjaudu ulos</a>
 {% else %}
 <form action="/login" method="POST">

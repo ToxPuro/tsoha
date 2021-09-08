@@ -32,9 +32,14 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        hash_value = generate_password_hash(password)
-        sql = "INSERT INTO users (username, password) VALUES (:username, :password)"
-        db.session.execute(sql, {"username":username, "password":hash_value})
-        db.session.commit()
+        users_service.create_user(username, password)
         return redirect("/")
+
+@app.route("/create_community", methods=["GET", "POST"])
+def create_community():
+    if request.method == "GET":
+        return render_template("create_community.html")
+    if request.method == "POST":
+        name = request.form["name"]
+        communities_service.create_community(name)
 
