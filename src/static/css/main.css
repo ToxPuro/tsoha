@@ -132,3 +132,20 @@
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+
+form {
+  margin:auto;
+}
+
+.useful_box {
+  display: flex;
+  align-content: space-between;
+}
+
+.help{
+  display: inline-block;
+}
+
+.padleft{
+  margin-left: 10px;
+}

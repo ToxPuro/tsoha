@@ -5,6 +5,17 @@
     <script src="{{url_for('static', filename='js/main.js')}}"></script>
 </head>
 
+<div class="container">
+    <nav class="navbar navbar-expand-sm navbar-light">
+      <a class="navbar-brand" href="/">Teddit</a>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+            <a href = "/register"><button class="dropbtn">Rekisteröidy</button></a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
 <form action="/login" method="POST">
     <div class="form-group col-6">
       <label for="username">Käyttäjätunnus</label>
