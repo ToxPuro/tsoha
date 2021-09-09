@@ -128,5 +128,17 @@ def delete_message(thread_id, message_id):
     messages_service.delete(message_id)
     return redirect(f"/thread/{thread_id}")
 
+@app.route("/edit/thread/<int:thread_id>", methods=["GET", "POST"])
+def edit_thread(thread_id):
+    if request.method == "GET":
+        thread = threads_service.get_thread(thread_id, session["username"])
+        return render_template("edit_thread.html", thread=thread)
+
+    if request.method == "POST":
+        new_title = request.form["title"]
+        new_content = request.form["content"]
+        threads_service.edit_thread(thread_id, new_title, new_content)
+        return redirect("/")
+
 
 

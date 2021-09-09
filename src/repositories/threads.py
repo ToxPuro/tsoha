@@ -55,5 +55,10 @@ class ThreadsRepository:
         db.session.execute(sql, {"thread_id": thread_id})
         db.session.commit()
 
+    def edit_thread(self, thread_id, new_title, new_content):
+        sql ="UPDATE threads SET title=:new_title, content=:new_content WHERE id=:thread_id"
+        db.session.execute(sql, {"thread_id": thread_id, "new_title": new_title, "new_content": new_content})
+        db.session.commit()
+
 
 threads_repository = ThreadsRepository()

@@ -36,4 +36,7 @@ class ThreadsService:
     def delete_thread(self, thread_id):
         self._threads_repository.delete_thread(thread_id)
 
+    def edit_thread(self, thread_id, new_title, new_content):
+        self._threads_repository.edit_thread(thread_id, new_title, new_content)
+
 threads_service = ThreadsService()
