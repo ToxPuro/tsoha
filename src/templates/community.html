@@ -1,8 +1,8 @@
 <p>{{community.name}}</p>
-{%if user_in %}
-{% else %}
-<a href="/join/{{community.name}}" >Liity</a>
+{%if not user_in %}
+    <a href="/join/{{community.name}}" >Liity</a>
 {% endif %}
+<p>{{user_in}}</p>
 {% for thread in threads %}
 <ul>
     <li>

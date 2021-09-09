@@ -60,7 +60,7 @@ def create_community():
 @app.route("/community/<community_name>")
 def community(community_name):
     community = communities_service.get_community(community_name)
-    user_in = community in communities_service.get_communities_user_not_in(session["username"])
+    user_in = community.name in [community.name for community in communities_service.get_communities_user_in(session["username"])]
     threads = communities_service.get_threads(community_name)
     return render_template("community.html", community=community, user_in =user_in, threads=threads)
 
