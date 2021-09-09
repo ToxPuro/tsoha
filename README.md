@@ -14,6 +14,9 @@ The main features would at least be:
 * Users can leave messages on these threads
 * Communities have admins who have the right to take down threads, remove messages and ban users from entering these communities
 * Users can upvote threads and messages which affects their visibility
+* Users can select from what time period to see threads (today, week, month, year, all)
+* Users can search for their communities and new communities
+* Users can search for different threads
 
 (If any instructors find the scope too narrow please inform me as soon as possible so I can plan more effectively future features)
 
