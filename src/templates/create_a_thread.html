@@ -1,15 +1,30 @@
+<head>
+    <title>Flask app</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="{{url_for('static', filename='js/main.js')}}"></script>
+</head>
+
 <form action="/create_a_thread" method="POST">
-    <p>Ryhmä:</p>
-    <select name="community_name">
+    <div class="form-group col-6">
+      <label for="username">Ryhmä</label>
+      <select name="community_name">
         {% for community in communities %}
             {% if community.user_in and not community.user_banned %}
                 <option value="{{community.name}}">{{community.name}}</option>
             {% endif %}
         {% endfor %}
-    </select>    
-    <p>Ketjun Otsikko:<br>
-    <input type="text" name="title"></p>
-    <p>Ketjun Sisältö:<br>
-    <input type="text" name="content"></p>
-    <input type="submit" value="Luo">
+    </select>  
+    </div>
+    <div class="form-group col-6">
+      <label for="title">Otsikko</label>
+      <input type="text" class="form-control" id="title" name="title">
+    </div>
+    <div class="form-group col-6">
+        <label for="content">Sisältö</label>
+        <input type="text" class="form-control" id="content" name="content">
+      </div>
+    <div class="form-group col-6">
+      <button type="submit" class="btn btn-primary">Luo</button>
+    </div>
 </form>

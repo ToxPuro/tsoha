@@ -1,3 +1,10 @@
+<head>
+    <title>Flask app</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="{{url_for('static', filename='js/main.js')}}"></script>
+</head>
+
 <form action="/edit/message/{{thread_id}}/{{message.id}}" method="POST">
     <p>Uusi Sisältö:<br>
     <input type="text" name="content" value="{{message.content}}"></p>
