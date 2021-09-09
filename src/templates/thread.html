@@ -54,6 +54,8 @@
             {{message.content}}
             {{message.votes}}
             {% if message.is_users or thread.user_is_admin %}
+                <a href="/delete/message/{{thread.id}}/{{message.id}}"><button>Poista</button></a>
+                <a href="/edit/message/{{thread.id}}/{{message.id}}"><button>Muokkaa</button></a>
             {% endif %}
             </p>
         </div>
