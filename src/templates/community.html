@@ -5,6 +5,41 @@
     <script src="{{url_for('static', filename='js/main.js')}}"></script>
 </head>
 
+
+<div class="container">
+  <nav class="navbar navbar-expand-sm navbar-light">
+    <a class="navbar-brand" href="/">Teddit</a>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <div class="dropdown">
+          <button onclick="myFunctionA()" class="dropbtn">Ryhmäsi</button>
+          <div id="myDropdownA" class="dropdown-content">
+            <input type="text" placeholder="Etsi..." id="myInputA" onkeyup="filterFunctionA()">
+            {% for community in communities %}
+              {% if community.user_in and not community.user_banned %}
+                  <a href="/community/{{community.name}}">{{community.name}}</a>
+              {% endif %}
+          {% endfor %}
+          </div>
+      </div>      
+      </li>
+      <li class="nav-item">
+        <div class="dropdown">
+          <button onclick="myFunctionB()" class="dropbtn">Etsi ryhmiä</button>
+          <div id="myDropdownB" class="dropdown-content">
+            <input type="text" placeholder="Etsi..." id="myInputB" onkeyup="filterFunctionB()">
+            {% for community in communities %}
+              {% if not community.user_in %}
+                  <a href="/community/{{community.name}}">{{community.name}}</a>
+              {% endif %}
+          {% endfor %}
+          </div>
+      </div>
+      </li>
+    </ul>
+  </nav>
+</div>
+
 <p>{{community.name}}</p>
 {%if not community.user_in and not community_user.banned %}
     <a href="/join/{{community.name}}" >Liity</a>
