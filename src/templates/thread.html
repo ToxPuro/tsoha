@@ -12,7 +12,7 @@
     <p>edited</p>
 {% endif %}
 
-{% if thread.is_users %}
+{% if thread.is_users or thread.user_is_admin %}
     <a href="/delete/thread/{{thread.id}}">Poista</a>
     <a href="/edit/thread/{{thread.id}}">Muokkaa</a>
 {% endif %}
@@ -33,7 +33,7 @@
             {% if message.edited %}
             <p>edited</p>
             {% endif %}
-            {% if message.is_users %}
+            {% if message.is_users or thread.user_is_admin %}
                 <a href="/delete/message/{{thread.id}}/{{message.id}}">Poista</a>
                 <a href="/edit/message/{{thread.id}}/{{message.id}}">Muokkaa</a>
             {% endif %}
