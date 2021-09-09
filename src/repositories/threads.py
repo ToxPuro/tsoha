@@ -11,7 +11,7 @@ class ThreadsRepository:
         db.session.commit()
 
     def get_threads(self, community_name):
-        sql = "SELECT *, threads.id from threads INNER JOIN communities ON threads.community_id = communities.id WHERE communities.name = :community_name"
+        sql = "SELECT *, threads.id, COALESCE((SELECT SUM(vote) FROM threads_to_users WHERE threads_to_users.thread_id = threads.id),0) AS votes from threads INNER JOIN communities ON threads.community_id = communities.id WHERE communities.name = :community_name ORDER BY votes DESC"
         result = db.session.execute(sql, {"community_name": community_name })
         return result.fetchall()
 
