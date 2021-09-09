@@ -6,7 +6,11 @@
 </head>
 
 <form action="/edit/message/{{thread_id}}/{{message.id}}" method="POST">
-    <p>Uusi Sisältö:<br>
-    <input type="text" name="content" value="{{message.content}}"></p>
-    <input type="submit" value="Muokkaa">
+    <div class="form-group col-6">
+      <label for="content">Uusi Sisältö</label>
+      <textarea type="text" class="form-control" id="content" name="content"></textarea>
+    </div>
+    <div class="form-group col-6">
+      <button type="submit" class="btn btn-primary">Muokkaa</button>
+    </div>
 </form>
