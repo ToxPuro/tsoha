@@ -6,17 +6,18 @@
 </head>
 
 <h1>{{thread.title}}</h1>
-
-<div class="number">
-  <button class='down_count btn btn-info' title='Down'>-<i class='icon-minus'></i></button> 
-  <button class='up_count btn btn-info' title='Up'>+<i class='icon-plus'></i></button>
+<div class="mybox">
+    <div class="numberCircle">{{thread.votes}}</div>
+    <div class="number">
+      <a href="/downvote/{{thread.id}}"><button class='down_count btn btn-info' title='Down'>-<i class='icon-minus'></i></button> </a>
+      <a href="/upvote/{{thread.id}}"><button class='up_count btn btn-info' title='Up'>+<i class='icon-plus'></i></button></a>
+    </div>
 </div>
 
+
+
+
 <p>{{thread.content}}</p>
-
-<p>{{thread.votes}}</p>
-
-<p>{{thread.user_vote}}</p>
 
 <p>{{thread.user_is_admin}}</p>
 
