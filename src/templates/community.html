@@ -28,6 +28,7 @@
 </div>
 {% endif %}
 <p>{{user_in}}</p>
+
 <div class="container">
     <div class="row">
       <div class="col-sm-12 mb-3">
@@ -37,11 +38,13 @@
     <div class="row" id="myItems">
       <div class="col-sm-12 mb-3">
         {% for thread in threads %}
-            <div class="card">
+        <div class="card">
             <div class="card-body">
-              <h5 class="card-title"><a href="/thread/{{thread.id}}">{{thread.title}}</a></h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{thread.community_name}}</h6>
-              <p class="card-text">{{thread.content}}</p>
+              <div class="mybox">
+                <div>
+                  <h5 class="card-title"><a href="/thread/{{thread.id}}">{{thread.title}}</a></h5>
+                <div class="numberCircle">{{thread.votes}}</div>
+              </div>
             </div>
             </div>
         {% endfor %}

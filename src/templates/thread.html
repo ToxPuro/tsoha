@@ -1,4 +1,16 @@
+<head>
+    <title>Flask app</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="{{url_for('static', filename='js/main.js')}}"></script>
+</head>
+
 <h1>{{thread.title}}</h1>
+
+<div class="number">
+  <button class='down_count btn btn-info' title='Down'>-<i class='icon-minus'></i></button> 
+  <button class='up_count btn btn-info' title='Up'>+<i class='icon-plus'></i></button>
+</div>
 
 <p>{{thread.content}}</p>
 

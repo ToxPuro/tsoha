@@ -16,7 +16,7 @@ class ThreadsRepository:
         return result.fetchall()
 
     def get_user_threads(self, user_id):
-        sql = "SELECT *, threads.id, COALESCE((SELECT SUM(vote) FROM threads_to_users WHERE threads_to_users.thread_id = threads.id),0) AS votes from threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE community_users.user_id = :user_id ORDER BY votes DESC"
+        sql = "SELECT *, threads.id, communities.name AS community_name, COALESCE((SELECT SUM(vote) FROM threads_to_users WHERE threads_to_users.thread_id = threads.id),0) AS votes from threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE community_users.user_id = :user_id ORDER BY votes DESC"
         result = db.session.execute(sql, {"user_id": user_id })
         return result.fetchall()
 
