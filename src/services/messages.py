@@ -23,4 +23,10 @@ class MessagesService:
     def delete(self, message_id):
         self._messages_repository.delete(message_id)
 
+    def edit(self, message_id, new_content):
+        self._messages_repository.edit(message_id, new_content)
+
+    def get_message(self, message_id):
+        return self._messages_repository.get_message(message_id)
+
 messages_service = MessagesService()

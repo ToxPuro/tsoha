@@ -140,5 +140,17 @@ def edit_thread(thread_id):
         threads_service.edit_thread(thread_id, new_title, new_content)
         return redirect("/")
 
+@app.route("/edit/message/<int:thread_id>/<int:message_id>", methods=["GET", "POST"])
+def edit_message(thread_id, message_id):
+    if request.method == "GET":
+        message = messages_service.get_message(message_id)
+        print("MESSAGE", message)
+        return render_template("edit_message.html", message=message, thread_id=thread_id)
+
+    if request.method == "POST":
+        new_content = request.form["content"]
+        messages_service.edit(message_id, new_content)
+        return redirect(f"/thread/{thread_id}")
+
 
 

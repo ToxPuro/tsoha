@@ -30,6 +30,16 @@ class MessagesRepository:
         db.session.execute(sql, {"message_id":message_id})
         db.session.commit()
 
+    def edit(self, message_id, new_content):
+        sql = "UPDATE thread_messages SET content=:new_content WHERE id=:message_id"
+        db.session.execute(sql, {"message_id": message_id, "new_content": new_content})
+        db.session.commit()
+
+    def get_message(self, message_id):
+        sql = "SELECT * from thread_messages WHERE id=:message_id"
+        result =db.session.execute(sql, {"message_id" : message_id})
+        return result.fetchone()
+
 
 
 messages_repository = MessagesRepository()

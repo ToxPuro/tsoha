@@ -26,6 +26,7 @@
         <li>
             {% if message.is_users %}
                 <a href="/delete/message/{{thread.id}}/{{message.id}}">Poista</a>
+                <a href="/edit/message/{{thread.id}}/{{message.id}}">Muokkaa</a>
             {% endif %}
             <a href="/upvote/message/{{thread.id}}/{{message.id}}">Peukuta</a>
             <a href="/downvote/message/{{thread.id}}/{{message.id}}">Downvote</a>
