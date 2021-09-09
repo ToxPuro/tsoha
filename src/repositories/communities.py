@@ -10,7 +10,7 @@ class CommunitiesRepository:
         db.session.commit()
 
     def get_communities(self, user_id):
-        sql = "SELECT *,id, (SELECT :user_id IN (SELECT user_id FROM community_users WHERE community_id=id)) AS user_in from communities";
+        sql = "SELECT *,id, (SELECT :user_id IN (SELECT user_id FROM community_users WHERE community_id=id)) AS user_in, (SELECT banned FROM community_users WHERE community_id=id AND user_id=:user_id) AS user_banned from communities";
         result = db.session.execute(sql, {"user_id": user_id})
         return result.fetchall()
 

@@ -15,7 +15,7 @@
     <div id="myDropdownC" class="dropdown-content">
       <input type="text" placeholder="Etsi..." id="myInputC" onkeyup="filterFunctionC()">
       {% for user in users %}
-        {% if not user.admin %}
+        {% if not user.admin and not user.banned %}
             <div>
                 {{user.username}} <button><a href="/ban/{{community.name}}/{{user.username}}">Estä</a></button>
                 {{user.username}} <button><a href="/admin/{{community.name}}/{{user.username}}">Lisää ylläpitäjäksi</a></button>
