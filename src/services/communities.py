@@ -26,12 +26,12 @@ class CommunitiesService:
         return self._communities_repository.get_community(community_name, user.id)
 
     def join_community(self, community_name, username):
-        community = self.get_community(community_name)
+        community = self.get_community(community_name, username)
         user = self._users_repository.get_user_by_name(username)
         self._communities_repository.join_community(community.id, user.id)
 
     def add_admin(self, community_name, username):
-        community = self.get_community(community_name)
+        community = self.get_community(community_name, username)
         user = self._users_repository.get_user_by_name(username)
         self._communities_repository.add_admin(community.id, user.id)
 
@@ -40,5 +40,10 @@ class CommunitiesService:
 
     def get_users(self, community_name):
         return self._communities_repository.get_users(community_name)
+
+    def ban(self, community_name, username):
+        community = self.get_community(community_name, username)
+        user = self._users_repository.get_user_by_name(username)
+        self._communities_repository.ban(community.id, user.id)
 
 communities_service = CommunitiesService()

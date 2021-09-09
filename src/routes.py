@@ -152,5 +152,14 @@ def edit_message(thread_id, message_id):
         messages_service.edit(message_id, new_content)
         return redirect(f"/thread/{thread_id}")
 
+@app.route("/admin/<community_name>/<username>")
+def admin(community_name, username):
+    communities_service.add_admin(community_name, username)
+    return redirect(f"/community/{community_name}")
+
+@app.route("/ban/<community_name>/<username>")
+def ban(community_name, username):
+    communities_service.ban(community_name, username)
+    return redirect(f"/community/{community_name}")
 
 

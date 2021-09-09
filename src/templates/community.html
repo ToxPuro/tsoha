@@ -17,7 +17,8 @@
       {% for user in users %}
         {% if not user.admin %}
             <div>
-                {{user.username}}
+                {{user.username}} <button><a href="/ban/{{community.name}}/{{user.username}}">Estä</a></button>
+                {{user.username}} <button><a href="/admin/{{community.name}}/{{user.username}}">Lisää ylläpitäjäksi</a></button>
             </div>
         {% endif%}
     {% endfor %}
