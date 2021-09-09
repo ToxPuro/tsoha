@@ -23,11 +23,13 @@
 
     <ul>
         <li>
+            {% if message.is_users %}
+                <a href="/delete/message/{{thread.id}}/{{message.id}}">Poista</a>
+            {% endif %}
             <a href="/upvote/message/{{thread.id}}/{{message.id}}">Peukuta</a>
             <a href="/downvote/message/{{thread.id}}/{{message.id}}">Downvote</a>
             {{message.content}}
             {{message.votes}}
-            {{message.is_users}}
         </li>
     </ul>
 

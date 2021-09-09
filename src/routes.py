@@ -123,5 +123,10 @@ def delete_thread(thread_id):
     threads_service.delete_thread(thread_id)
     return redirect("/")
 
+@app.route("/delete/message/<int:thread_id>/<int:message_id>", methods=["GET"])
+def delete_message(thread_id, message_id):
+    messages_service.delete(message_id)
+    return redirect(f"/thread/{thread_id}")
+
 
 

@@ -25,6 +25,11 @@ class MessagesRepository:
             db.session.execute(sql, {"message_id": message_id, "user_id": user_id})
             db.session.commit()
 
+    def delete(self, message_id):
+        sql = "DELETE FROM thread_messages WHERE id=:message_id"
+        db.session.execute(sql, {"message_id":message_id})
+        db.session.commit()
+
 
 
 messages_repository = MessagesRepository()

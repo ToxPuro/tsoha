@@ -20,4 +20,7 @@ class MessagesService:
     def downvote(self, message_id, user_id):
         self._messages_repository.downvote(message_id, user_id)
 
+    def delete(self, message_id):
+        self._messages_repository.delete(message_id)
+
 messages_service = MessagesService()
