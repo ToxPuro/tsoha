@@ -2,7 +2,9 @@
     <p>Ryhmä:</p>
     <select name="community_name">
         {% for community in communities %}
-            <option value="{{community.name}}">{{community.name}}</option>
+            {% if community.user_in and not community.user_banned %}
+                <option value="{{community.name}}">{{community.name}}</option>
+            {% endif %}
         {% endfor %}
     </select>    
     <p>Ketjun Otsikko:<br>

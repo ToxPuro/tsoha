@@ -72,7 +72,7 @@ def join(community_name):
 @app.route("/create_a_thread", methods=["GET", "POST"])
 def create_a_thread():
     if request.method == "GET":
-        communities = communities_service.get_communities_user_in(session["username"])
+        communities = communities_service.get_communities(session["username"])
         return render_template("create_a_thread.html", communities=communities)
     if request.method == "POST":
         title = request.form["title"]

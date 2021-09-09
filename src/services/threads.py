@@ -12,7 +12,7 @@ class ThreadsService:
 
     def create_a_thread(self, community_name, username, title, content):
         user = self._users_repository.get_user_by_name(username)
-        community = self._communities_repository.get_community(community_name)
+        community = self._communities_repository.get_community(community_name, user.id)
         self._threads_repository.create_a_thread(community.id, user.id, title, content)
 
     def get_thread(self, thread_id, username):
