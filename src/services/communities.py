@@ -21,8 +21,9 @@ class CommunitiesService:
         user = self._users_repository.get_user_by_name(username)
         return self._communities_repository.get_communities(user.id)
 
-    def get_community(self, community_name):
-        return self._communities_repository.get_community(community_name)
+    def get_community(self, community_name, username):
+        user = self._users_repository.get_user_by_name(username)
+        return self._communities_repository.get_community(community_name, user.id)
 
     def join_community(self, community_name, username):
         community = self.get_community(community_name)

@@ -1,6 +1,14 @@
 <p>{{community.name}}</p>
-{%if not user_in %}
+{%if not community.user_in %}
     <a href="/join/{{community.name}}" >Liity</a>
+{% endif %}
+{%if community.user_is_admin %}
+<div class="dropdown">
+    <button onclick="myFunctionC()" class="dropbtn">Estä käyttäjiä</button>
+    <div id="myDropdownC" class="dropdown-content">
+      <input type="text" placeholder="Etsi..." id="myInputC" onkeyup="filterFunctionC()">
+    </div>
+</div>
 {% endif %}
 <p>{{user_in}}</p>
 {% for thread in threads %}

@@ -8,10 +8,12 @@
 <a href="/create_community">Luo uusi ryhmä</a>
 <a href="/logout">Kirjaudu ulos</a>
 
+
+
 <div class="dropdown">
-    <button onclick="myFunction()" class="dropbtn">Ryhmäsi</button>
-    <div id="myDropdown" class="dropdown-content">
-      <input type="text" placeholder="Etsi..." id="myInput" onkeyup="filterFunction()">
+    <button onclick="myFunctionA()" class="dropbtn">Ryhmäsi</button>
+    <div id="myDropdownA" class="dropdown-content">
+      <input type="text" placeholder="Etsi..." id="myInputA" onkeyup="filterFunctionA()">
       {% for community in communities %}
         {% if community.user_in %}
             <a href="/community/{{community.name}}">{{community.name}}</a>
@@ -19,6 +21,19 @@
     {% endfor %}
     </div>
 </div>
+
+<div class="dropdown">
+    <button onclick="myFunctionB()" class="dropbtn">Etsi ryhmiä</button>
+    <div id="myDropdownB" class="dropdown-content">
+      <input type="text" placeholder="Etsi..." id="myInputB" onkeyup="filterFunctionB()">
+      {% for community in communities %}
+        {% if not community.user_in %}
+            <a href="/community/{{community.name}}">{{community.name}}</a>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
 <hr>
 <a href="/create_a_thread">Luo uusi ketju</a>
 {% for thread in threads%}

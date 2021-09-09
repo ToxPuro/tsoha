@@ -14,9 +14,9 @@ class CommunitiesRepository:
         result = db.session.execute(sql, {"user_id": user_id})
         return result.fetchall()
 
-    def get_community(self, community_name):
-        sql = "SELECT * from communities WHERE communities.name = :community_name"
-        result = db.session.execute(sql, {"community_name": community_name})
+    def get_community(self, community_name, user_id):
+        sql = "SELECT *, id, (SELECT :user_id IN (SELECT user_id FROM community_users WHERE community_id=id)) AS user_in, (SELECT :user_id IN (SELECT user_id FROM community_users WHERE community_id=id AND community_users.admin=TRUE)) AS user_is_admin from communities WHERE communities.name = :community_name"
+        result = db.session.execute(sql, {"community_name": community_name, "user_id": user_id})
         return result.fetchone()
 
     def join_community(self, community_id, user_id):
