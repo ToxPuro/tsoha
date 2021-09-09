@@ -118,5 +118,10 @@ def downvote_message(thread_id, message_id):
     messages_service.downvote(message_id, user.id)
     return redirect(f"/thread/{thread_id}")
 
+@app.route("/delete/thread/<int:thread_id>", methods=["GET"])
+def delete_thread(thread_id):
+    threads_service.delete_thread(thread_id)
+    return redirect("/")
+
 
 

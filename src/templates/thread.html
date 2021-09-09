@@ -6,7 +6,9 @@
 
 <p>{{thread.user_vote}}</p>
 
-<p>{{thread.is_users}}</p>
+{% if thread.is_users %}
+    <a href="/delete/thread/{{thread.id}}">Poista</a>
+{% endif %}
 
 <a href="/upvote/{{thread.id}}">Peukuta</a>
 

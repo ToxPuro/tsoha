@@ -50,5 +50,10 @@ class ThreadsRepository:
             db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
             db.session.commit()
 
+    def delete_thread(self, thread_id):
+        sql = "DELETE FROM threads WHERE id=:thread_id"
+        db.session.execute(sql, {"thread_id": thread_id})
+        db.session.commit()
+
 
 threads_repository = ThreadsRepository()

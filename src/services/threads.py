@@ -33,4 +33,7 @@ class ThreadsService:
     def downvote(self, thread_id, user_id):
         self._threads_repository.downvote(thread_id, user_id)
 
+    def delete_thread(self, thread_id):
+        self._threads_repository.delete_thread(thread_id)
+
 threads_service = ThreadsService()
