@@ -78,7 +78,7 @@ def create_a_thread():
         title = request.form["title"]
         content = request.form["content"]
         community_name = request.form["community_name"]
-        threads_service.create_a_thread(community_name,title, content)
+        threads_service.create_a_thread(community_name, session["username"], title, content)
         return redirect("/")
 
 @app.route("/thread/<int:thread_id>", methods=["GET", "POST"])

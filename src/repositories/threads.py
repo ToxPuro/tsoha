@@ -5,9 +5,9 @@ class ThreadsRepository:
     def __init__(self):
         pass
 
-    def create_a_thread(self, community_id, title, content):
-        sql = "INSERT INTO threads (community_id, title, content) VALUES (:community_id, :title, :content)"
-        db.session.execute(sql, {"community_id": community_id, "title":title, "content":content})
+    def create_a_thread(self, community_id, user_id, title, content):
+        sql = "INSERT INTO threads (community_id, user_id, title, content) VALUES (:community_id, :user_id, :title, :content)"
+        db.session.execute(sql, {"community_id": community_id, "user_id": user_id, "title":title, "content":content})
         db.session.commit()
 
     def get_threads(self, community_name):
@@ -16,7 +16,7 @@ class ThreadsRepository:
         return result.fetchall()
 
     def get_thread(self, thread_id, user_id):
-        sql = "SELECT *,id, COALESCE((SELECT SUM(vote)  AS votes FROM threads_to_users WHERE threads_to_users.thread_id = id),0), COALESCE((SELECT vote from threads_to_users WHERE threads_to_users.user_id = :user_id AND threads_to_users.thread_id = id LIMIT 1),0) AS user_vote from threads WHERE threads.id = :thread_id"
+        sql = "SELECT *,id, COALESCE((SELECT SUM(vote)  AS votes FROM threads_to_users WHERE threads_to_users.thread_id = id),0), COALESCE((SELECT vote from threads_to_users WHERE threads_to_users.user_id = :user_id AND threads_to_users.thread_id = id LIMIT 1),0) AS user_vote, user_id=:user_id AS is_users from threads WHERE threads.id = :thread_id"
         result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
         return result.fetchone()
 
