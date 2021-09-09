@@ -46,4 +46,9 @@ class CommunitiesService:
         user = self._users_repository.get_user_by_name(username)
         self._communities_repository.ban(community.id, user.id)
 
+    def leave(self, community_name, username):
+        community = self.get_community(community_name, username)
+        user = self._users_repository.get_user_by_name(username)
+        self._communities_repository.leave(community.id, user.id)
+
 communities_service = CommunitiesService()

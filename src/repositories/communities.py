@@ -40,5 +40,10 @@ class CommunitiesRepository:
         result = db.session.execute(sql, {"community_name": community_name})
         return result.fetchall()
 
+    def leave(self, community_id, user_id):
+        sql = "DELETE from community_users WHERE community_id=:community_id AND user_id=:user_id AND banned=FALSE"
+        db.session.execute(sql, {"community_id" : community_id, "user_id": user_id})
+        db.session.commit()
+
     
 communities_repository = CommunitiesRepository()

@@ -6,8 +6,10 @@
 </head>
 
 <p>{{community.name}}</p>
-{%if not community.user_in %}
+{%if not community.user_in and not user.banned %}
     <a href="/join/{{community.name}}" >Liity</a>
+{% else %} 
+    <a href="/leave/{{community.name}}">Lähde</a>
 {% endif %}
 {%if community.user_is_admin %}
 <div class="dropdown">

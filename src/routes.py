@@ -162,4 +162,10 @@ def ban(community_name, username):
     communities_service.ban(community_name, username)
     return redirect(f"/community/{community_name}")
 
+@app.route("/leave/<community_name>")
+def leave(community_name):
+    communities_service.leave(community_name, session["username"])
+    return redirect("/")
+    
+
 
