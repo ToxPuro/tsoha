@@ -3,7 +3,12 @@
 {% else %}
 <a href="/join/{{community.name}}" >Liity</a>
 {% endif %}
-{% for thread in threads %} 
-    <a href="/thread/{{thread.id}}">{{thread.title}}</a>
+{% for thread in threads %}
+<ul>
+    <li>
+        <a href="/thread/{{thread.id}}">{{thread.title}} {{thread.id}}</a>
+    </li>
+</ul>
+    
 {% endfor %}
 
