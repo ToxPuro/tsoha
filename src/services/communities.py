@@ -37,6 +37,6 @@ class CommunitiesService:
         self._communities_repository.add_admin(community.id, user.id)
 
     def get_threads(self, community_name):
-        return self._threads_repository.get_threads(community_name)
+        return self._threads_repository.get_community_threads(community_name)
 
 communities_service = CommunitiesService()

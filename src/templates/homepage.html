@@ -1,15 +1,20 @@
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
 <a href="/create_community">Luo uusi ryhmä</a>
 <a href="/logout">Kirjaudu ulos</a>
+<select onChange="window.location.href=this.value">
+    <option value="none" selected disabled hidden>Ryhmäsi</option>
+    {% for community in communities %}
+        <option value="/community/{{community.name}}">{{community.name}}</option>
+    {% endfor %}
+
+</select>
 <hr>
 <a href="/create_a_thread">Luo uusi ketju</a>
-{% for community in communities_user_not_in %}
-<a href="/community/{{community.name}}" >{{community.name}}</a>
-<hr>
+{% for thread in threads%}
+    <ul>
+        <li>
+            {{thread.title}} {{thread.votes}}
+        </li>
+    </ul>
 {% endfor %}
-<hr>
-{% for community in communities_user_in %}
-<a href="/community/{{community.name}}" >{{community.name}}</a>
-<hr>
 
-{% endfor %}

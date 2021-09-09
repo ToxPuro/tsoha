@@ -18,9 +18,9 @@ def index():
 
 @app.route("/homepage")
 def homepage():
-    communities_user_not_in = communities_service.get_communities_user_not_in(session["username"])
-    communities_user_in = communities_service.get_communities_user_in(session["username"])
-    return render_template("homepage.html", communities_user_not_in=communities_user_not_in, communities_user_in=communities_user_in)
+    communities = communities_service.get_communities_user_in(session["username"])
+    threads = users_service.get_threads(session["username"])
+    return render_template("homepage.html", threads=threads, communities=communities)
 
 @app.route("/login",methods=["POST"])
 def login():
