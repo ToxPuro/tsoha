@@ -38,4 +38,7 @@ class CommunitiesService:
     def get_threads(self, community_name):
         return self._threads_repository.get_community_threads(community_name)
 
+    def get_users(self, community_name):
+        return self._communities_repository.get_users(community_name)
+
 communities_service = CommunitiesService()

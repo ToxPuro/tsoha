@@ -61,7 +61,8 @@ def create_community():
 def community(community_name):
     community = communities_service.get_community(community_name, session["username"])
     threads = communities_service.get_threads(community_name)
-    return render_template("community.html", community=community, threads=threads)
+    users = communities_service.get_users(community_name)
+    return render_template("community.html", community=community, threads=threads, users=users)
 
 @app.route("/join/<community_name>")
 def join(community_name):

@@ -29,4 +29,10 @@ class CommunitiesRepository:
         db.session.execute(sql, {"community_id": community_id, "user_id": user_id})
         db.session.commit()
 
+    def get_users(self, community_name):
+        sql = "SELECT * from communities INNER JOIN community_users ON community_users.community_id = communities.id INNER JOIN users ON community_users.user_id = users.id WHERE communities.name = :community_name"
+        result = db.session.execute(sql, {"community_name": community_name})
+        return result.fetchall()
+
+    
 communities_repository = CommunitiesRepository()

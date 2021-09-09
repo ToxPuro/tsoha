@@ -1,3 +1,10 @@
+<head>
+    <title>Flask app</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="{{url_for('static', filename='js/main.js')}}"></script>
+</head>
+
 <p>{{community.name}}</p>
 {%if not community.user_in %}
     <a href="/join/{{community.name}}" >Liity</a>
@@ -7,6 +14,13 @@
     <button onclick="myFunctionC()" class="dropbtn">Estä käyttäjiä</button>
     <div id="myDropdownC" class="dropdown-content">
       <input type="text" placeholder="Etsi..." id="myInputC" onkeyup="filterFunctionC()">
+      {% for user in users %}
+        {% if not user.admin %}
+            <div>
+                {{user.username}}
+            </div>
+        {% endif%}
+    {% endfor %}
     </div>
 </div>
 {% endif %}
