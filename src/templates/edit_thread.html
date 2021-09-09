@@ -6,9 +6,16 @@
 </head>
 
 <form action="/edit/thread/{{thread.id}}" method="POST">
-    <p>Ketjun Otsikko:<br>
-    <input type="text" name="title" value="{{thread.title}}""></p>
-    <p>Ketjun Sisältö:<br>
-    <input type="text" name="content" value="{{thread.content}}"></p>
-    <input type="submit" value="Muokkaa">
+    <div class="form-group col-6">
+        <label for="title">Otsikko</label>
+        <input type="text" class="form-control" id="title" name="title" value="{{thread.title}}">
+      </div>
+      <div class="form-group col-6">
+          <label for="content">Sisältö</label>
+          <textarea type="text" class="form-control" id="content" name="content">{{thread.content}}</textarea>
+        </div>
+      <div class="form-group col-6">
+        <button type="submit" class="btn btn-primary">Muokkaa</button>
+      </div>
 </form>
+
