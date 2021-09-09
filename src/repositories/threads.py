@@ -21,7 +21,7 @@ class ThreadsRepository:
         return result.fetchone()
 
     def get_messages(self, thread_id, user_id):
-        sql = "SELECT content, id, user_id, COALESCE((SELECT SUM(vote) FROM messages_to_users WHERE messages_to_users.message_id=id),0) AS votes, user_id=:user_id AS is_users from thread_messages WHERE thread_messages.thread_id = :thread_id ORDER BY votes DESC"
+        sql = "SELECT content, id, user_id, edited, COALESCE((SELECT SUM(vote) FROM messages_to_users WHERE messages_to_users.message_id=id),0) AS votes, user_id=:user_id AS is_users from thread_messages WHERE thread_messages.thread_id = :thread_id ORDER BY votes DESC"
         result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
         return result.fetchall()
 
@@ -56,7 +56,7 @@ class ThreadsRepository:
         db.session.commit()
 
     def edit_thread(self, thread_id, new_title, new_content):
-        sql ="UPDATE threads SET title=:new_title, content=:new_content WHERE id=:thread_id"
+        sql ="UPDATE threads SET title=:new_title, content=:new_content, edited=TRUE WHERE id=:thread_id"
         db.session.execute(sql, {"thread_id": thread_id, "new_title": new_title, "new_content": new_content})
         db.session.commit()
 

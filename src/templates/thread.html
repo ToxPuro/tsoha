@@ -6,6 +6,10 @@
 
 <p>{{thread.user_vote}}</p>
 
+{% if thread.edited %}
+    <p>edited</p>
+{% endif %}
+
 {% if thread.is_users %}
     <a href="/delete/thread/{{thread.id}}">Poista</a>
     <a href="/edit/thread/{{thread.id}}">Muokkaa</a>
@@ -24,6 +28,9 @@
 
     <ul>
         <li>
+            {% if message.edited %}
+            <p>edited</p>
+            {% endif %}
             {% if message.is_users %}
                 <a href="/delete/message/{{thread.id}}/{{message.id}}">Poista</a>
                 <a href="/edit/message/{{thread.id}}/{{message.id}}">Muokkaa</a>
