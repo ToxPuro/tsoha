@@ -21,7 +21,7 @@ class ThreadsRepository:
         return result.fetchone()
 
     def get_messages(self, thread_id, user_id):
-        sql = "SELECT content, id, COALESCE((SELECT SUM(vote) FROM messages_to_users WHERE messages_to_users.message_id=id),0) AS votes from thread_messages WHERE thread_messages.thread_id = :thread_id"
+        sql = "SELECT content, id, COALESCE((SELECT SUM(vote) FROM messages_to_users WHERE messages_to_users.message_id=id),0) AS votes from thread_messages WHERE thread_messages.thread_id = :thread_id ORDER BY votes DESC"
         result = db.session.execute(sql, {"thread_id": thread_id})
         return result.fetchall()
 

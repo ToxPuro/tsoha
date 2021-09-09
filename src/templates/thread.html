@@ -16,8 +16,14 @@
 </form>
 
 {% for message in messages %} 
-    {{message.content}}
-    {{message.votes}}
-    <a href="/upvote/message/{{thread.id}}/{{message.id}}">Peukuta</a>
-    <a href="/downvote/message/{{thread.id}}/{{message.id}}">Downvote</a>
+
+    <ul>
+        <li>
+            <a href="/upvote/message/{{thread.id}}/{{message.id}}">Peukuta</a>
+            <a href="/downvote/message/{{thread.id}}/{{message.id}}">Downvote</a>
+            {{message.content}}
+            {{message.votes}}
+        </li>
+    </ul>
+
 {% endfor %}
