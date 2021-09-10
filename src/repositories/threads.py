@@ -22,7 +22,10 @@ class ThreadsRepository:
 
 
     def get_thread(self, thread_id, user_id):
-        sql = "SELECT *,id, COALESCE((SELECT SUM(vote)  AS votes FROM threads_to_users WHERE threads_to_users.thread_id = id),0) AS votes, COALESCE((SELECT vote from threads_to_users WHERE threads_to_users.user_id = :user_id AND threads_to_users.thread_id = id LIMIT 1),0) AS user_vote, user_id=:user_id AS is_users, (SELECT admin FROM threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE threads.id = :thread_id AND community_users.user_id = :user_id ) AS user_is_admin from threads WHERE threads.id = :thread_id"
+        sql = "SELECT *,id, COALESCE((SELECT SUM(vote)  AS votes FROM threads_to_users WHERE threads_to_users.thread_id = id),0) AS votes, COALESCE((SELECT vote from threads_to_users WHERE threads_to_users.user_id = :user_id AND threads_to_users.thread_id = id LIMIT 1),0) AS user_vote," \
+        "user_id=:user_id AS is_users, (SELECT admin FROM threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE threads.id = :thread_id AND community_users.user_id = :user_id ) AS user_is_admin, " \
+        "(SELECT community_users.banned FROM threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE threads.id = :thread_id AND community_users.user_id = :user_id ) AS user_is_banned " \
+        "from threads WHERE threads.id = :thread_id"
         result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
         return result.fetchone()
 

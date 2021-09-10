@@ -26,7 +26,8 @@ class MessagesService:
     def edit(self, message_id, new_content):
         self._messages_repository.edit(message_id, new_content)
 
-    def get_message(self, message_id):
-        return self._messages_repository.get_message(message_id)
+    def get_message(self, message_id, username):
+        user = self._users_repository.get_user_by_name(username)
+        return self._messages_repository.get_message(message_id, user.id)
 
 messages_service = MessagesService()
