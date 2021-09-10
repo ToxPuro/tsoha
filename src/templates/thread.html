@@ -24,10 +24,16 @@
       <ul class="navbar-nav">
           {% if thread.is_users or thread.user_is_admin %}
         <li class="nav-item">
-            <a href = "/delete/thread/{{thread.id}}"><button class="dropbtn">Poista</button></a>
+          <form action="/delete/thread/{{thread.id}}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="dropbtn">Poista</button>
+          </form>
           </li>
           <li class="nav-item">
-            <a href = "/edit/thread/{{thread.id}}"><button class="dropbtn">Muokkaa</button></a>
+            <form action="/edit/thread/{{thread.id}}" method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="dropbtn" type="submit">Muokkaa</button>
+            </form>
           </li>
           {% endif %}
       </ul>
@@ -38,8 +44,14 @@
 <div class="mybox">
     <div class="numberCircle">{{thread.votes}}</div>
     <div class="number">
-      <a href="/downvote/{{thread.id}}"><button class='down_count btn btn-info' title='Down'>-<i class='icon-minus'></i></button> </a>
-      <a href="/upvote/{{thread.id}}"><button class='up_count btn btn-info' title='Up'>+<i class='icon-plus'></i></button></a>
+      <form action="/downvote/{{thread.id}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class='down_count btn btn-info' title='Down' type="submit">-<i class='icon-minus'></i></button>
+      </form>
+      <form action="/upvote/{{thread.id}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class='up_count btn btn-info' title='Up' type="submit">+<i class='icon-plus'></i></button>
+      </form>
     </div>
 </div>
 
@@ -72,8 +84,14 @@
         <li>
             <div class="useful_box">
                 <div>
-                    <a href="/downvote/message/{{thread.id}}/{{message.id}}"><button class='down_count btn btn-info' title='Down'>-<i class='icon-minus'></i></button> </a>
-                    <a href="/upvote/message/{{thread.id}}/{{message.id}}"><button class='up_count btn btn-info' title='Up'>+<i class='icon-plus'></i></button></a>
+                  <form action="/downvote/message/{{thread.id}}/{{message.id}}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class='down_count btn btn-info' title='Down' type="submit">-<i class='icon-minus'></i></button>
+                  </form>
+                  <form action="/upvote/message/{{thread.id}}/{{message.id}}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class='up_count btn btn-info' title='Up' type="submit">+<i class='icon-plus'></i></button>
+                  </form>
                 </div>
             <p class="padleft">
             {% if message.edited %}
@@ -82,8 +100,12 @@
             {{message.content}}
             {{message.votes}}
             {% if message.is_users or thread.user_is_admin %}
-                <a href="/delete/message/{{thread.id}}/{{message.id}}"><button>Poista</button></a>
-                <a href="/edit/message/{{thread.id}}/{{message.id}}"><button>Muokkaa</button></a>
+            <form action="/delete/message/{{thread.id}}/{{message.id}}" method="POST">
+              <button type="submit">Poista</button>
+            </form>
+            <form action="/edit/message/{{thread.id}}/{{message.id}}" method="POST">
+              <button type="submit">Muokkaa</button>
+            </form>
             {% endif %}
             </p>
         </div>
