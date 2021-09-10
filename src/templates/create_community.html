@@ -27,7 +27,7 @@
     </nav>
   </div>
 
-<form action="/create_community" method="POST">
+<form action="/create_community" method="POST" onsubmit="return check(this)">
     <div class="form-group col-6">
       <label for="name">Nimi</label>
       <input type="text" class="form-control" id="name" name="name">
@@ -40,3 +40,25 @@
       <button type="submit" class="btn btn-primary">Luo</button>
     </div>
 </form>
+
+<script>
+  function check(form) {
+      if (form.name.value.length > 100) {
+          alert("Nimi on liian pitkä");
+          return false;
+      }
+      if (form.name.value.length === 0){
+        alert("Nimi on tyhjä");
+        return false
+      }
+      if (form.description.value.length > 5000) {
+          alert("Kuvaus on liian pitkä");
+          return false;
+      }
+      if (form.description.value.length === 0){
+        alert("Kuvaus on tyhjä")
+        return false
+      }
+      return true;
+  }
+  </script>

@@ -28,7 +28,7 @@
     </nav>
   </div>
 
-<form action="/edit/thread/{{thread.id}}" method="POST">
+<form action="/edit/thread/{{thread.id}}" method="POST" onsubmit="return check(this)">
     <div class="form-group col-6">
         <label for="title">Otsikko</label>
         <input type="text" class="form-control" id="title" name="title" value="{{thread.title}}">
@@ -41,4 +41,26 @@
         <button type="submit" class="btn btn-primary">Muokkaa</button>
       </div>
 </form>
+
+<script>
+  function check(form) {
+      if (form.title.value.length > 100) {
+          alert("Otsikko on liian pitkä");
+          return false;
+      }
+      if (form.title.value.length === 0){
+        alert("Otsikko on tyhjä");
+        return false
+      }
+      if (form.content.value.length > 5000) {
+          alert("Sisältö on liian pitkä");
+          return false;
+      }
+      if (form.content.value.length === 0){
+        alert("Sisältö on tyhjä")
+        return false
+      }
+      return true;
+  }
+  </script>
 

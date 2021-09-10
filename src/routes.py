@@ -57,10 +57,15 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
 
+        input_validation = validation_service.validate_user(username, password)
+        if not input_validation.passed:
+            flash(input_validation.error_message, "warning")
+            return redirect("/register")
+
         if users_service.username_taken(username):
             flash("Käyttäjänimi on jo otettu", "warning")
             return redirect("/register")
-            
+
         session["username"] = username
         users_service.create_user(username, password)
         flash("Rekisteröity", "success")
@@ -73,6 +78,12 @@ def create_community():
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
+
+        input_validation = validation_service.validate_community(name, description)
+        if not input_validation.passed:
+            flash(input_validation.error_message, "warning")
+            return redirect("/create_community")
+        
         communities_service.create_community(name, description, session["username"])
         return redirect("/")
 
@@ -97,6 +108,13 @@ def create_a_thread():
         title = request.form["title"]
         content = request.form["content"]
         community_name = request.form["community_name"]
+
+        input_validation = validation_service.validate_thread(title, content)
+
+        if not input_validation.passed:
+            flash(input_validation.error_message, "warning")
+            return redirect("/create_a_thread")
+
         threads_service.create_a_thread(community_name, session["username"], title, content)
         flash("Ketju luotu", "success")
         return redirect("/")
@@ -110,6 +128,13 @@ def thread(thread_id):
 @app.route("/message/<int:thread_id>", methods=["POST"])
 def message(thread_id):
     content = request.form["content"]
+
+    input_validation = validation_service.validate_message(content)
+
+    if not input_validation.passed:
+        flash(input_validation.error_message, "warning")
+        return redirect(f"/thread/{thread_id}")
+
     user = users_service.get_user_by_name(session["username"])
     threads_service.add_message(thread_id, user.id, content)
     return redirect(f"/thread/{thread_id}")
@@ -163,6 +188,13 @@ def edit_thread(thread_id):
     if request.method == "POST":
         new_title = request.form["title"]
         new_content = request.form["content"]
+
+        input_validation = validation_service.validate_thread(title, content)
+
+        if not input_validation.passed:
+            flash(input_validation.error_message, "warning")
+            return redirect(f"/edit/thread/{thread_id}")
+    
         threads_service.edit_thread(thread_id, new_title, new_content)
         flash("Muokattu", "success")
         return redirect(f"/thread/{thread_id}")
@@ -175,6 +207,12 @@ def edit_message(thread_id, message_id):
 
     if request.method == "POST":
         new_content = request.form["content"]
+
+        input_validation = validation_service.validate_message(content)
+        if not input_validation.passed:
+            flash(input_validation.error_message, "warning")
+            return redirect(f"/edit/message/{thread_id}/{message_id}")
+            
         messages_service.edit(message_id, new_content)
         flash("Muokattu", "success")
         return redirect(f"/thread/{thread_id}")

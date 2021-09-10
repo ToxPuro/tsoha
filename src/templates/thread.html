@@ -48,10 +48,24 @@
 
 
 
-<form action="/message/{{thread.id}}" method="POST">
+<form action="/message/{{thread.id}}" method="POST" onsubmit="return check(this)">
     <textarea name="content"></textarea>
     <input type="submit" value="Lisää kommentti">
 </form>
+
+<script>
+  function check(form) {
+      if (form.content.value.length > 5000) {
+          alert("Kommentti on liian pitkä");
+          return false;
+      }
+      if (form.description.value.length === 0){
+        alert("Kommentti on tyhjä")
+        return false
+      }
+      return true;
+  }
+  </script>
 
 
 <ul>

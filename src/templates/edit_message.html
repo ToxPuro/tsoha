@@ -28,7 +28,7 @@
     </nav>
   </div>
 
-<form action="/edit/message/{{thread_id}}/{{message.id}}" method="POST">
+<form action="/edit/message/{{thread_id}}/{{message.id}}" method="POST" onsubmit="return check(this)">
     <div class="form-group col-6">
       <label for="content">Uusi Sisältö</label>
       <textarea type="text" class="form-control" id="content" name="content">{{message.content}}</textarea>
@@ -37,3 +37,17 @@
       <button type="submit" class="btn btn-primary">Muokkaa</button>
     </div>
 </form>
+
+<script>
+  function check(form) {
+      if (form.content.value.length > 5000) {
+          alert("Kommentti on liian pitkä");
+          return false;
+      }
+      if (form.description.value.length === 0){
+        alert("Kommentti on tyhjä")
+        return false
+      }
+      return true;
+  }
+  </script>

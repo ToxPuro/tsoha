@@ -29,7 +29,7 @@
     </nav>
   </div>
 
-<form action="/register" method="POST">
+<form action="/register" method="POST" onsubmit="return check(this)">
     <div class="form-group col-6">
       <label for="username">Käyttäjätunnus</label>
       <input type="text" class="form-control" id="username" name="username">
@@ -42,3 +42,26 @@
       <button type="submit" class="btn btn-primary">Rekisteröidy</button>
     </div>
 </form>
+
+
+<script>
+  function check(form) {
+      if (form.username.value.length > 100) {
+          alert("Käyttäjätunnus on liian pitkä");
+          return false;
+      }
+      if (form.username.value.length === 0){
+        alert("Käyttäjätunnus on tyhjä");
+        return false
+      }
+      if (form.password.value.length > 100) {
+          alert("Salasana on liian pitkä");
+          return false;
+      }
+      if (form.password.value.length < 8){
+        alert("Salasana on liian lyhyt")
+        return false
+      }
+      return true;
+  }
+  </script>
