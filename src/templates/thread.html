@@ -1,3 +1,4 @@
+
 <head>
   <title>Flask app</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -44,11 +45,11 @@
 <div class="mybox">
     <div class="numberCircle">{{thread.votes}}</div>
     <div class="number">
-      <form action="/downvote/{{thread.id}}" method="POST">
+      <form action="/downvote/{{thread.id}}" method="POST" class="inline">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button class='down_count btn btn-info' title='Down' type="submit">-<i class='icon-minus'></i></button>
       </form>
-      <form action="/upvote/{{thread.id}}" method="POST">
+      <form action="/upvote/{{thread.id}}" method="POST" class="inline">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button class='up_count btn btn-info' title='Up' type="submit">+<i class='icon-plus'></i></button>
       </form>
@@ -84,11 +85,11 @@
         <li>
             <div class="useful_box">
                 <div>
-                  <form action="/downvote/message/{{thread.id}}/{{message.id}}" method="POST">
+                  <form action="/downvote/message/{{thread.id}}/{{message.id}}" method="POST" class="inline">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class='down_count btn btn-info' title='Down' type="submit">-<i class='icon-minus'></i></button>
                   </form>
-                  <form action="/upvote/message/{{thread.id}}/{{message.id}}" method="POST">
+                  <form action="/upvote/message/{{thread.id}}/{{message.id}}" method="POST" class="inline">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class='up_count btn btn-info' title='Up' type="submit">+<i class='icon-plus'></i></button>
                   </form>
@@ -100,10 +101,10 @@
             {{message.content}}
             {{message.votes}}
             {% if message.is_users or thread.user_is_admin %}
-            <form action="/delete/message/{{thread.id}}/{{message.id}}" method="POST">
+            <form action="/delete/message/{{thread.id}}/{{message.id}}" method="POST" class="inline">
               <button type="submit">Poista</button>
             </form>
-            <form action="/edit/message/{{thread.id}}/{{message.id}}" method="POST">
+            <form action="/edit/message/{{thread.id}}/{{message.id}}" method="POST" class="inline">
               <button type="submit">Muokkaa</button>
             </form>
             {% endif %}

@@ -5,6 +5,7 @@ from services.users import users_service
 from services.communities import communities_service
 from services.threads import threads_service
 from services.messages import messages_service
+from services.validation import validation_service
 from app import app
 from db import db
 
@@ -67,8 +68,8 @@ def register():
         password = request.form["password"]
 
         input_validation = validation_service.validate_user(username, password)
-        if not input_validation.passed:
-            flash(input_validation.error_message, "warning")
+        if not input_validation["passed"]:
+            flash(input_validation["error_message"], "warning")
             return redirect("/register")
 
         if users_service.username_taken(username):
@@ -96,8 +97,8 @@ def create_community():
         description = request.form["description"]
 
         input_validation = validation_service.validate_community(name, description)
-        if not input_validation.passed:
-            flash(input_validation.error_message, "warning")
+        if not input_validation["passed"]:
+            flash(input_validation["error_message"], "warning")
             return redirect("/create_community")
         
         communities_service.create_community(name, description, session["username"])
@@ -157,8 +158,8 @@ def create_a_thread():
 
         input_validation = validation_service.validate_thread(title, content)
 
-        if not input_validation.passed:
-            flash(input_validation.error_message, "warning")
+        if not input_validation["passed"]:
+            flash(input_validation["error_message"], "warning")
             return redirect("/create_a_thread")
 
         community = communities_service.get_community(community_name, session["username"])
@@ -205,8 +206,8 @@ def message(thread_id):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
 
-    if not input_validation.passed:
-        flash(input_validation.error_message, "warning")
+    if not input_validation["passed"]:
+        flash(input_validation["error_message"], "warning")
         return redirect(f"/thread/{thread_id}")
 
     user = users_service.get_user_by_name(session["username"])
@@ -349,8 +350,8 @@ def edit_thread(thread_id):
 
         input_validation = validation_service.validate_thread(title, content)
 
-        if not input_validation.passed:
-            flash(input_validation.error_message, "warning")
+        if not input_validation["passed"]:
+            flash(input_validation["error_message"], "warning")
             return redirect(f"/edit/thread/{thread_id}")
     
         threads_service.edit_thread(thread_id, new_title, new_content)
@@ -380,8 +381,8 @@ def edit_message(thread_id, message_id):
             return redirect("/")
 
         input_validation = validation_service.validate_message(content)
-        if not input_validation.passed:
-            flash(input_validation.error_message, "warning")
+        if not input_validation["passed"]:
+            flash(input_validation["error_message"], "warning")
             return redirect(f"/edit/message/{thread_id}/{message_id}")
 
         messages_service.edit(message_id, new_content)

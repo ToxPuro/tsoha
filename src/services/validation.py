@@ -1,5 +1,5 @@
 class ValidationService:
-    def __init__():
+    def __init__(self):
 
         self._limit_text = 100
         self._limit_textarea = 5000
@@ -34,7 +34,7 @@ class ValidationService:
             error_message = "Kommentti on tyhjä"
             passed = False
 
-        if len(content) > self_limit_textarea:
+        if len(content) > self._limit_textarea:
             error_message = "Kommentti on liian pitkä"
             passed = False
 
