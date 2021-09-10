@@ -24,43 +24,24 @@
   <nav class="navbar navbar-expand-sm navbar-light">
     <a class="navbar-brand" href="/">Teddit</a>
     <ul class="navbar-nav">
+      {% if not community.user_in and not community.user.banned %}
       <li class="nav-item">
-        <div class="dropdown">
-          <button onclick="myFunctionA()" class="dropbtn">Ryhmäsi</button>
-          <div id="myDropdownA" class="dropdown-content">
-            <input type="text" placeholder="Etsi..." id="myInputA" onkeyup="filterFunctionA()">
-            {% for community in communities %}
-              {% if community.user_in and not community.user_banned %}
-                  <a href="/community/{{community.name}}">{{community.name}}</a>
-              {% endif %}
-          {% endfor %}
-          </div>
-      </div>      
+          <form action="/join/{{community.name}}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="dropbtn" type="submit">Liity</button>
+          </form>
       </li>
+      {% else %}
       <li class="nav-item">
-        <div class="dropdown">
-          <button onclick="myFunctionB()" class="dropbtn">Etsi ryhmiä</button>
-          <div id="myDropdownB" class="dropdown-content">
-            <input type="text" placeholder="Etsi..." id="myInputB" onkeyup="filterFunctionB()">
-            {% for community in communities %}
-              {% if not community.user_in %}
-                  <a href="/community/{{community.name}}">{{community.name}}</a>
-              {% endif %}
-          {% endfor %}
-          </div>
-      </div>
+        <form action="/leave/{{community.name}}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="dropbtn" type="submit">Lähde</button>
+        </form>
       </li>
-    </ul>
-  </nav>
-</div>
+      {% endif %}
+      <li class="nav-item">
 
-<p>{{community.name}}</p>
-{%if not community.user_in and not community_user.banned %}
-    <a href="/join/{{community.name}}" >Liity</a>
-{% else %} 
-    <a href="/leave/{{community.name}}">Lähde</a>
-{% endif %}
-{%if community.user_is_admin %}
+      {%if community.user_is_admin %}
 <div class="dropdown">
     <button onclick="myFunctionC()" class="dropbtn">Estä käyttäjiä</button>
     <div id="myDropdownC" class="dropdown-content">
@@ -68,14 +49,30 @@
       {% for user in users %}
         {% if not user.admin and not user.banned %}
             <div>
-                {{user.username}} <button><a href="/ban/{{community.name}}/{{user.username}}">Estä</a></button>
-                {{user.username}} <button><a href="/admin/{{community.name}}/{{user.username}}">Lisää ylläpitäjäksi</a></button>
+              <form action="/ban/{{community_name}}/{{user.username}}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {{user.username}} <button type="submit">Estä</button>
+              </form>
+              <form action="/admin/{{community_name}}/{{user.username}}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {{user.username}} <button type="submit">Lisää ylläpitäjäksi</button>
+              </form>
             </div>
         {% endif%}
     {% endfor %}
     </div>
 </div>
+</li>
 {% endif %}
+
+
+      fdsaf
+    </ul>
+  </nav>
+</div>
+
+
+
 <p>{{user_in}}</p>
 
 <div class="container">

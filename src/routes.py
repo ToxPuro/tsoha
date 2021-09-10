@@ -213,7 +213,7 @@ def message(thread_id):
     threads_service.add_message(thread_id, user.id, content)
     return redirect(f"/thread/{thread_id}")
 
-@app.route("/upvote/<int:thread_id>", methods=["GET"])
+@app.route("/upvote/<int:thread_id>", methods=["POST"])
 def upvote(thread_id):
 
     if not session:
@@ -233,7 +233,7 @@ def upvote(thread_id):
     flash("Äänestetty", "success")
     return redirect(f"/thread/{thread_id}")
 
-@app.route("/downvote/<int:thread_id>", methods=["GET"])
+@app.route("/downvote/<int:thread_id>", methods=["POST"])
 def downvote(thread_id):
     if not session:
         return redirect("/")
@@ -252,7 +252,7 @@ def downvote(thread_id):
     flash("Äänestetty", "success")
     return redirect(f"/thread/{thread_id}")
 
-@app.route("/upvote/message/<int:thread_id>/<int:message_id>", methods=["GET"])
+@app.route("/upvote/message/<int:thread_id>/<int:message_id>", methods=["POST"])
 def upvote_message(thread_id, message_id):
     if not session:
         return redirect("/")
@@ -270,7 +270,7 @@ def upvote_message(thread_id, message_id):
     flash("Äänestetty", "success")
     return redirect(f"/thread/{thread_id}")
 
-@app.route("/downvote/message/<int:thread_id>/<int:message_id>", methods=["GET"])
+@app.route("/downvote/message/<int:thread_id>/<int:message_id>", methods=["POST"])
 def downvote_message(thread_id, message_id):
     if not session:
         return redirect("/")
@@ -288,7 +288,7 @@ def downvote_message(thread_id, message_id):
     flash("Äänestetty", "success")
     return redirect(f"/thread/{thread_id}")
 
-@app.route("/delete/thread/<int:thread_id>", methods=["GET"])
+@app.route("/delete/thread/<int:thread_id>", methods=["POST"])
 def delete_thread(thread_id):
 
     if not session:
@@ -306,7 +306,7 @@ def delete_thread(thread_id):
     flash("Ketju poistettu", "success")
     return redirect("/")
 
-@app.route("/delete/message/<int:thread_id>/<int:message_id>", methods=["GET"])
+@app.route("/delete/message/<int:thread_id>/<int:message_id>", methods=["POST"])
 def delete_message(thread_id, message_id):
 
     if not session:
