@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from services.users import users_service
 from services.communities import communities_service
@@ -8,12 +8,21 @@ from services.messages import messages_service
 from app import app
 from db import db
 
+def flash_error(error):
+    error = error.args[0] if len(error.args) > 0 else None
+    category = "warning"
+    if error is None:
+        error = "Not authorized"
+        category = "danger"
+    flash(error, category)
+
 
 @app.route("/")
 def index():
     if session:
-        if session["username"]:
+        if "username" in session.keys():
             return redirect("/homepage")
+            
     return render_template("index.html")
 
 @app.route("/homepage")
@@ -29,6 +38,9 @@ def login():
 
     if users_service.login(username, password):
         session["username"] = username
+
+    else:
+        flash("Kirjautuminen ei onnistunut", "warning")
     
     return redirect("/")
 
@@ -44,7 +56,14 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+
+        if users_service.username_taken(username):
+            flash("Käyttäjänimi on jo otettu", "warning")
+            return redirect("/register")
+            
+        session["username"] = username
         users_service.create_user(username, password)
+        flash("Rekisteröity", "success")
         return redirect("/")
 
 @app.route("/create_community", methods=["GET", "POST"])
@@ -79,6 +98,7 @@ def create_a_thread():
         content = request.form["content"]
         community_name = request.form["community_name"]
         threads_service.create_a_thread(community_name, session["username"], title, content)
+        flash("Ketju luotu", "success")
         return redirect("/")
 
 @app.route("/thread/<int:thread_id>", methods=["GET", "POST"])
@@ -98,34 +118,40 @@ def message(thread_id):
 def upvote(thread_id):
     user = users_service.get_user_by_name(session["username"])
     threads_service.upvote(thread_id, user.id)
+    flash("Äänestetty", "success")
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/downvote/<int:thread_id>", methods=["GET"])
 def downvote(thread_id):
     user = users_service.get_user_by_name(session["username"])
     threads_service.downvote(thread_id, user.id)
+    flash("Äänestetty", "success")
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/upvote/message/<int:thread_id>/<int:message_id>", methods=["GET"])
 def upvote_message(thread_id, message_id):
     user = users_service.get_user_by_name(session["username"])
     messages_service.upvote(message_id, user.id)
+    flash("Äänestetty", "success")
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/downvote/message/<int:thread_id>/<int:message_id>", methods=["GET"])
 def downvote_message(thread_id, message_id):
     user = users_service.get_user_by_name(session["username"])
     messages_service.downvote(message_id, user.id)
+    flash("Äänestetty", "success")
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/delete/thread/<int:thread_id>", methods=["GET"])
 def delete_thread(thread_id):
     threads_service.delete_thread(thread_id)
+    flash("Ketju poistettu", "success")
     return redirect("/")
 
 @app.route("/delete/message/<int:thread_id>/<int:message_id>", methods=["GET"])
 def delete_message(thread_id, message_id):
     messages_service.delete(message_id)
+    flash("Viesti poistettu", "success")
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/edit/thread/<int:thread_id>", methods=["GET", "POST"])
@@ -138,33 +164,37 @@ def edit_thread(thread_id):
         new_title = request.form["title"]
         new_content = request.form["content"]
         threads_service.edit_thread(thread_id, new_title, new_content)
-        return redirect("/")
+        flash("Muokattu", "success")
+        return redirect(f"/thread/{thread_id}")
 
 @app.route("/edit/message/<int:thread_id>/<int:message_id>", methods=["GET", "POST"])
 def edit_message(thread_id, message_id):
     if request.method == "GET":
         message = messages_service.get_message(message_id)
-        print("MESSAGE", message)
         return render_template("edit_message.html", message=message, thread_id=thread_id)
 
     if request.method == "POST":
         new_content = request.form["content"]
         messages_service.edit(message_id, new_content)
+        flash("Muokattu", "success")
         return redirect(f"/thread/{thread_id}")
 
 @app.route("/admin/<community_name>/<username>")
 def admin(community_name, username):
     communities_service.add_admin(community_name, username)
+    flash("Lisätty ylläpitäjä", "success")
     return redirect(f"/community/{community_name}")
 
 @app.route("/ban/<community_name>/<username>")
 def ban(community_name, username):
     communities_service.ban(community_name, username)
+    flash("Estetty käyttäjä", "success")
     return redirect(f"/community/{community_name}")
 
 @app.route("/leave/<community_name>")
 def leave(community_name):
     communities_service.leave(community_name, session["username"])
+    flash("Lähdetty ryhmästä", "success")
     return redirect("/")
     
 

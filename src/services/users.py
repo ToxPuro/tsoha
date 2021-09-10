@@ -31,4 +31,7 @@ class UsersService:
         user = self._users_repository.get_user_by_name(username)
         return self._threads_repository.get_user_threads(user.id)
 
+    def username_taken(self, username):
+        return self._users_repository.username_taken(username)
+
 users_service = UsersService()

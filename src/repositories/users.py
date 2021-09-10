@@ -16,6 +16,11 @@ class UsersRepository:
         db.session.execute(sql, {"username":username, "password":hash_value})
         db.session.commit()
 
+    def username_taken(self, username):
+        sql = "SELECT :username IN (SELECT username from users);"
+        result = db.session.execute(sql, {"username": username})
+        return result.fetchone()
+
 
         
 
