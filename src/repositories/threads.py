@@ -11,18 +11,18 @@ class ThreadsRepository:
         db.session.commit()
 
     def get_community_threads(self, community_name):
-        sql = "SELECT *, threads.id, communities.name AS community_name, COALESCE((SELECT SUM(vote) FROM threads_to_users WHERE threads_to_users.thread_id = threads.id),0) AS votes from threads INNER JOIN communities ON threads.community_id = communities.id WHERE communities.name = :community_name ORDER BY votes DESC"
+        sql = "SELECT threads.user_id, threads.community_id, threads.title, threads.content, threads.id, communities.name AS community_name, COALESCE((SELECT SUM(vote) FROM threads_to_users WHERE threads_to_users.thread_id = threads.id),0) AS votes from threads INNER JOIN communities ON threads.community_id = communities.id WHERE communities.name = :community_name ORDER BY votes DESC"
         result = db.session.execute(sql, {"community_name": community_name })
         return result.fetchall()
 
     def get_user_threads(self, user_id):
-        sql = "SELECT *, threads.id, communities.name AS community_name, COALESCE((SELECT SUM(vote) FROM threads_to_users WHERE threads_to_users.thread_id = threads.id),0) AS votes from threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE community_users.user_id = :user_id ORDER BY votes DESC"
+        sql = "SELECT threads.title, threads.content, threads.community_id, threads.user_id, threads.id, communities.name AS community_name, COALESCE((SELECT SUM(vote) FROM threads_to_users WHERE threads_to_users.thread_id = threads.id),0) AS votes from threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE community_users.user_id = :user_id ORDER BY votes DESC"
         result = db.session.execute(sql, {"user_id": user_id })
         return result.fetchall()
 
 
     def get_thread(self, thread_id, user_id):
-        sql = "SELECT *,id, COALESCE((SELECT SUM(vote)  AS votes FROM threads_to_users WHERE threads_to_users.thread_id = id),0) AS votes, COALESCE((SELECT vote from threads_to_users WHERE threads_to_users.user_id = :user_id AND threads_to_users.thread_id = id LIMIT 1),0) AS user_vote," \
+        sql = "SELECT title, content, id, community_id, user_id, COALESCE((SELECT SUM(vote)  AS votes FROM threads_to_users WHERE threads_to_users.thread_id = id),0) AS votes, COALESCE((SELECT vote from threads_to_users WHERE threads_to_users.user_id = :user_id AND threads_to_users.thread_id = id LIMIT 1),0) AS user_vote," \
         "user_id=:user_id AS is_users, (SELECT admin FROM threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE threads.id = :thread_id AND community_users.user_id = :user_id ) AS user_is_admin, " \
         "(SELECT community_users.banned FROM threads INNER JOIN communities ON threads.community_id = communities.id INNER JOIN community_users ON community_users.community_id = communities.id WHERE threads.id = :thread_id AND community_users.user_id = :user_id ) AS user_is_banned " \
         "from threads WHERE threads.id = :thread_id"

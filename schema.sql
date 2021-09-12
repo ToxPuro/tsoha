@@ -1,9 +1,10 @@
 CREATE TABLE messages (id SERIAL PRIMARY KEY, content TEXT);
 CREATE TABLE users (id SERIAL PRIMARY KEY, username TEXT UNIQUE, password TEXT);
 CREATE TABLE communities (id SERIAL PRIMARY KEY, name TEXT UNIQUE, description TEXT);
-CREATE TABLE community_users (community_id INT NOT NULL, user_id INT NOT NULL, admin BOOLEAN DEFAULT FALSE, banned BOOLEAN DEFAULT FALSE);
-CREATE TABLE threads (id SERIAL PRIMARY KEY, community_id INT NOT NULL, user_id INT NOT NULL, title TEXT, content TEXT, edited BOOLEAN DEFAULT FALSE);
-CREATE TABLE thread_messages (id SERIAL PRIMARY KEY, thread_id INT NOT NULL, user_id INT NOT NULL, content TEXT, edited BOOLEAN DEFAULT FALSE);
-CREATE TABLE threads_to_users(user_id INT NOT NULL, thread_id INT NOT NULL, vote INT NOT NULL);
-CREATE TABLE messages_to_users (user_id INT NOT NULL, message_id INT NOT NULL, vote INT NOT NULL);
-
+CREATE TABLE community_users (community_id REFERENCES communities ON DELETE CASCADE, user_id REFERENCES users ON DELETE CASCADE, admin BOOLEAN DEFAULT FALSE, banned BOOLEAN DEFAULT FALSE, Co);
+CREATE TABLE threads (id SERIAL PRIMARY KEY, community_id INT REFERENCES communities  ON DELETE CASCADE, user_id INT REFERENCES users ON DELETE CASCADE,
+ title TEXT, content TEXT, edited BOOLEAN DEFAULT FALSE);
+CREATE TABLE thread_messages (id SERIAL PRIMARY KEY, thread_id REFERENCES threads ON DELETE CASCADE, user_id REFERENCES users ON DELETE CASCADE
+, content TEXT, edited BOOLEAN DEFAULT FALSE);
+CREATE TABLE threads_to_users(user_id REFERENCES users ON DELETE CASCADE, thread_id REFERENCES threads ON DELETE CASCADE, vote INT NOT NULL);
+CREATE TABLE messages_to_users (user_id REFERENCES users ON DELETE CASCADE, message_id REFERENCES thread_messages ON DELETE CASCADE, vote INT NOT NULL);

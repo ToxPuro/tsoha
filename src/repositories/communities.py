@@ -10,12 +10,12 @@ class CommunitiesRepository:
         db.session.commit()
 
     def get_communities(self, user_id):
-        sql = "SELECT *,id, (SELECT :user_id IN (SELECT user_id FROM community_users WHERE community_id=id)) AS user_in, (SELECT banned FROM community_users WHERE community_id=id AND user_id=:user_id LIMIT 1) AS user_banned from communities";
+        sql = "SELECT name, description, id, (SELECT :user_id IN (SELECT user_id FROM community_users WHERE community_id=id)) AS user_in, (SELECT banned FROM community_users WHERE community_id=id AND user_id=:user_id LIMIT 1) AS user_banned from communities";
         result = db.session.execute(sql, {"user_id": user_id})
         return result.fetchall()
 
     def get_community(self, community_name, user_id):
-        sql = "SELECT *, id, (SELECT :user_id IN (SELECT user_id FROM community_users WHERE community_id=id)) AS user_in, (SELECT admin FROM community_users WHERE community_id=id AND user_id=:user_id LIMIT 1) AS user_is_admin, (SELECT banned FROM community_users WHERE community_id=id AND user_id=:user_id LIMIT 1) AS user_banned  from communities WHERE communities.name = :community_name"
+        sql = "SELECT name, description, id, (SELECT :user_id IN (SELECT user_id FROM community_users WHERE community_id=id)) AS user_in, (SELECT admin FROM community_users WHERE community_id=id AND user_id=:user_id LIMIT 1) AS user_is_admin, (SELECT banned FROM community_users WHERE community_id=id AND user_id=:user_id LIMIT 1) AS user_banned  from communities WHERE communities.name = :community_name"
         result = db.session.execute(sql, {"community_name": community_name, "user_id": user_id})
         return result.fetchone()
 
@@ -36,7 +36,7 @@ class CommunitiesRepository:
 
 
     def get_users(self, community_name):
-        sql = "SELECT * from communities INNER JOIN community_users ON community_users.community_id = communities.id INNER JOIN users ON community_users.user_id = users.id WHERE communities.name = :community_name"
+        sql = "SELECT users.username, community_users.banned, community_users.admin from communities INNER JOIN community_users ON community_users.community_id = communities.id INNER JOIN users ON community_users.user_id = users.id WHERE communities.name = :community_name"
         result = db.session.execute(sql, {"community_name": community_name})
         return result.fetchall()
 
