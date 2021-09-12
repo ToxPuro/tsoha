@@ -9,13 +9,14 @@ from services.validation import validation_service
 from app import app
 from db import db
 
-def flash_error(error):
-    error = error.args[0] if len(error.args) > 0 else None
-    category = "warning"
-    if error is None:
-        error = "Not authorized"
-        category = "danger"
-    flash(error, category)
+def logged_in(session):
+    if not session:
+        return False
+    
+    if not "username" in session.keys():
+        return False
+
+    return True
 
 
 @app.route("/")
@@ -31,10 +32,7 @@ def index():
 @app.route("/homepage")
 def homepage():
 
-    if not session:
-        return redirect("/")
-
-    if not "username" in session.keys():
+    if not logged_in(session):
         return redirect("/")
 
     communities = communities_service.get_communities(session["username"])
@@ -64,58 +62,39 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
 
-        input_validation = validation_service.validate_user(username, password)
-        if not input_validation["passed"]:
-            flash(input_validation["error_message"], "warning")
+        if not validation_service.validate_user(request.form["username"], request.form["password"]):
             return redirect("/register")
 
-        if users_service.username_taken(username):
-            flash("Käyttäjänimi on jo otettu", "warning")
-            return redirect("/register")
-
-        session["username"] = username
-        users_service.create_user(username, password)
+        session["username"] = request.form["username"]
+        users_service.create_user(request.form["username"], request.form["password"])
         flash("Rekisteröity", "success")
         return redirect("/")
 
 @app.route("/create_community", methods=["GET", "POST"])
 def create_community():
 
-    if not session:
-        return redirect("/")
-
-    if not "username" in session.keys():
+    if not logged_in(session):
         return redirect("/")
 
     if request.method == "GET":
         return render_template("create_community.html")
-    if request.method == "POST":
-        name = request.form["name"]
-        description = request.form["description"]
-
-        input_validation = validation_service.validate_community(name, description)
-        if not input_validation["passed"]:
-            flash(input_validation["error_message"], "warning")
+    if request.method == "POST":        
+        if not validation_service.validate_community(request.form["name"], request.form["description"]):
             return redirect("/create_community")
         
-        communities_service.create_community(name, description, session["username"])
+        communities_service.create_community(request.form["name"], request.form["description"], session["username"])
         return redirect("/")
 
 @app.route("/community/<community_name>")
 def community(community_name):
 
-    if not session:
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
+    
 
-    community = communities_service.get_community(community_name, session["username"])
-
-    if community.user_banned:
+    if communities_service.user_is_banned(community_name, session["username"]):
         flash(f"Olet estetty ryhmästä {community_name}", "warning")
         return redirect("/")
 
@@ -125,14 +104,11 @@ def community(community_name):
 
 @app.route("/join/<community_name>")
 def join(community_name):
-    if not session:
+
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    community = communities_service.get_community(community_name, session["username"])
-    if community.user_banned:
+    if communities_service.user_is_banned(community_name, session["username"]):
         flash(f"Olet estetty ryhmästä {community_name}", "warning")
         return redirect("/")
 
@@ -142,28 +118,22 @@ def join(community_name):
 @app.route("/create_a_thread", methods=["GET", "POST"])
 def create_a_thread():
 
-    if not session:
-        return redirect("/")
-
-    if not "username" in session.keys():
+    if not logged_in(session):
         return redirect("/")
 
     if request.method == "GET":
         communities = communities_service.get_communities(session["username"])
         return render_template("create_a_thread.html", communities=communities)
     if request.method == "POST":
+
         title = request.form["title"]
         content = request.form["content"]
         community_name = request.form["community_name"]
 
-        input_validation = validation_service.validate_thread(title, content)
-
-        if not input_validation["passed"]:
-            flash(input_validation["error_message"], "warning")
+        if not validation_service.validate_thread(title, content):
             return redirect("/create_a_thread")
 
-        community = communities_service.get_community(community_name, session["username"])
-        if community.user_banned:
+        if communities_service.user_is_banned(community_name, session["username"]):
             flash(f"Olet estetty ryhmästä {community_name}", "warning")
             return redirect("/")
 
@@ -174,14 +144,11 @@ def create_a_thread():
 @app.route("/thread/<int:thread_id>", methods=["GET", "POST"])
 def thread(thread_id):
 
-    if not session:
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    thread = threads_service.get_thread(thread_id, session["username"])
-    if thread.user_is_banned:
+    
+    if threads_service.user_is_banned(thread_id, session["username"]):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
 
@@ -191,23 +158,18 @@ def thread(thread_id):
 @app.route("/message/<int:thread_id>", methods=["POST"])
 def message(thread_id):
 
-    if not session:
-        return redirect("/")
-
-    if not "username" in session.keys():
+    if not logged_in(session):
         return redirect("/")
 
     content = request.form["content"]
 
-    input_validation = validation_service.validate_message(content)
+    
 
-    thread = threads_service.get_thread(thread_id, session["username"])
-    if thread.user_is_banned:
+    if threads_service.user_is_banned(thread_id, session["username"]):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
 
-    if not input_validation["passed"]:
-        flash(input_validation["error_message"], "warning")
+    if validation_service.validate_message(content):
         return redirect(f"/thread/{thread_id}")
 
     user = users_service.get_user_by_name(session["username"])
@@ -217,16 +179,12 @@ def message(thread_id):
 @app.route("/upvote/<int:thread_id>", methods=["POST"])
 def upvote(thread_id):
 
-    if not session:
-        return redirect("/")
-
-    if not "username" in session.keys():
+    if not logged_in(session):
         return redirect("/")
 
     user = users_service.get_user_by_name(session["username"])
 
-    thread = threads_service.get_thread(thread_id, session["username"])
-    if thread.user_is_banned:
+    if threads_service.user_is_banned(thread_id, session["username"]):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
 
@@ -236,16 +194,13 @@ def upvote(thread_id):
 
 @app.route("/downvote/<int:thread_id>", methods=["POST"])
 def downvote(thread_id):
-    if not session:
-        return redirect("/")
 
-    if not "username" in session.keys():
+    if not logged_in(session):
         return redirect("/")
 
     user = users_service.get_user_by_name(session["username"])
 
-    thread = threads_service.get_thread(thread_id, session["username"])
-    if thread.user_is_banned:
+    if threads_service.user_is_banned(thread_id, session["username"]):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
 
@@ -255,14 +210,11 @@ def downvote(thread_id):
 
 @app.route("/upvote/message/<int:thread_id>/<int:message_id>", methods=["POST"])
 def upvote_message(thread_id, message_id):
-    if not session:
+
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    thread = threads_service.get_thread(thread_id, session["username"])
-    if thread.user_is_banned:
+    if threads_service.user_is_banned(thread_id, session["username"]):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
 
@@ -273,14 +225,11 @@ def upvote_message(thread_id, message_id):
 
 @app.route("/downvote/message/<int:thread_id>/<int:message_id>", methods=["POST"])
 def downvote_message(thread_id, message_id):
-    if not session:
+
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    thread = threads_service.get_thread(thread_id, session["username"])
-    if thread.user_is_banned:
+    if threads_service.user_is_banned(thread_id, session["username"]):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
 
@@ -292,14 +241,10 @@ def downvote_message(thread_id, message_id):
 @app.route("/delete/thread/<int:thread_id>", methods=["POST"])
 def delete_thread(thread_id):
 
-    if not session:
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    thread = threads_service.get_thread(thread_id, session["username"])
-    if not thread.is_users and not thread.user_is_admin:
+    if not threads_service.has_right_to_modify(thread_id, session["username"]):
         flash("Sinulla ei ole oikeutta poistaa ketjua", "warning")
         return redirect("/")
 
@@ -310,15 +255,10 @@ def delete_thread(thread_id):
 @app.route("/delete/message/<int:thread_id>/<int:message_id>", methods=["POST"])
 def delete_message(thread_id, message_id):
 
-    if not session:
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    thread = threads_service.get_thread(thread_id, session["username"])
-    message = messages_service.get_message(message_id, session["username"])
-    if not message.is_users and not thread.user_is_admin:
+    if not messages_service.has_right_to_modify(thread_id, message_id, session["username"]):
         flash("Sinulla ei ole oikeutta poistaa viestiä", "warning")
         return redirect("/")
 
@@ -329,10 +269,7 @@ def delete_message(thread_id, message_id):
 @app.route("/edit/thread/<int:thread_id>", methods=["GET", "POST"])
 def edit_thread(thread_id):
 
-    if not session:
-        return redirect("/")
-
-    if not "username" in session.keys():
+    if not logged_in(session):
         return redirect("/")
 
     if request.method == "GET":
@@ -348,10 +285,9 @@ def edit_thread(thread_id):
             flash("Sinulla ei ole oikeutta muokata ketjua", "warning")
             return redirect("/")
 
-        input_validation = validation_service.validate_thread(title, content)
 
-        if not input_validation["passed"]:
-            flash(input_validation["error_message"], "warning")
+
+        if validation_service.validate_thread(new_title, new_content):
             return redirect(f"/edit/thread/{thread_id}")
     
         threads_service.edit_thread(thread_id, new_title, new_content)
@@ -361,10 +297,7 @@ def edit_thread(thread_id):
 @app.route("/edit/message/<int:thread_id>/<int:message_id>", methods=["GET", "POST"])
 def edit_message(thread_id, message_id):
 
-    if not session:
-        return redirect("/")
-
-    if not "username" in session.keys():
+    if not logged_in(session):
         return redirect("/")
 
     if request.method == "GET":
@@ -374,15 +307,12 @@ def edit_message(thread_id, message_id):
     if request.method == "POST":
         new_content = request.form["content"]
 
-        thread = threads_service.get_thread(thread_id, session["username"])
-        message = messages_service.get_message(message_id, session["username"])
-        if not message.is_users and not thread.user_is_admin:
+
+        if not messages_service.has_right_to_modify(thread_id, message_id, session["username"]):
             flash("Sinulla ei ole oikeutta muokata viestiä", "warning")
             return redirect("/")
 
-        input_validation = validation_service.validate_message(content)
-        if not input_validation["passed"]:
-            flash(input_validation["error_message"], "warning")
+        if not validation_service.validate_message(new_content):
             return redirect(f"/edit/message/{thread_id}/{message_id}")
 
         messages_service.edit(message_id, new_content)
@@ -392,14 +322,10 @@ def edit_message(thread_id, message_id):
 @app.route("/admin/<community_name>/<username>")
 def admin(community_name, username):
 
-    if not session:
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    community = communities_service.get_community(community_name, session["username"])
-    if not community.user_is_admin:
+    if not communities_service.user_is_admin(community_name, session["username"]):
         flash(f"Sinun täytyy olla ryhmän {community_name} ylläpitäjä")
         redirect("/community/{community_name}")
 
@@ -410,14 +336,10 @@ def admin(community_name, username):
 @app.route("/ban/<community_name>/<username>")
 def ban(community_name, username):
 
-    if not session:
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    community = communities_service.get_community(community_name, session["username"])
-    if not community.user_is_admin:
+    if not communities_service.user_is_admin(community_name, session["username"]):
         flash(f"Sinun täytyy olla ryhmän {community_name} ylläpitäjä")
         redirect("/community/{community_name}")
 
@@ -428,14 +350,10 @@ def ban(community_name, username):
 @app.route("/leave/<community_name>")
 def leave(community_name):
 
-    if not session:
+    if not logged_in(session):
         return redirect("/")
 
-    if not "username" in session.keys():
-        return redirect("/")
-
-    community = communities_service.get_community(community_name, session["username"])
-    if not community.user_is_admin:
+    if not communities_service.user_is_admin(community_name, session["username"]):
         flash(f"Sinun täytyy olla ryhmän {community_name} ylläpitäjä")
         redirect("/community/{community_name}")
 

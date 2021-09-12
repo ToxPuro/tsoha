@@ -51,4 +51,12 @@ class CommunitiesService:
         user = self._users_repository.get_user_by_name(username)
         self._communities_repository.leave(community.id, user.id)
 
+    def user_is_admin(self, community_name, username):
+        community = self.get_community(community_name, username)
+        return community.user_is_admin
+
+    def user_is_banned(self, community_name, username):
+        community = self.get_community(community_name, username):
+        return community.user_banned
+
 communities_service = CommunitiesService()

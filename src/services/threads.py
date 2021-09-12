@@ -39,4 +39,12 @@ class ThreadsService:
     def edit_thread(self, thread_id, new_title, new_content):
         self._threads_repository.edit_thread(thread_id, new_title, new_content)
 
+    def has_right_to_modify(self, thread_id, username):
+        thread = self._threads_repository.get_thread(thread_id, username)
+        return thread.is_users or thread.user_is_admin
+
+    def user_is_banned(self, thread_id, username):
+        thread = self.get_thread(thread_id, username)
+        return thread.user_is_banned
+
 threads_service = ThreadsService()
