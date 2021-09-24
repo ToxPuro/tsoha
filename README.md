@@ -1,5 +1,7 @@
 # Teddit
 
+https://tsoha-toxpuro.herokuapp.com/
+
 Coursework for course https://hy-tsoha.github.io/materiaali/
 
 This project is a rather straightforward copy of an existing media application Reddit https://www.reddit.com/.
@@ -16,6 +18,4 @@ The main features would at least be:
 * Users can upvote threads and messages which affects their visibility
 * Users can search for their communities and new communities
 * Users can search for different threads
-
-(If any instructors find the scope too narrow please inform me as soon as possible so I can plan more effectively future features)
 
