@@ -17,9 +17,9 @@ class UsersRepository:
         db.session.commit()
 
     def username_taken(self, username):
-        sql = "SELECT :username IN (SELECT username from users);"
+        sql = "SELECT :username IN (SELECT username from users) as bool;"
         result = db.session.execute(sql, {"username": username})
-        return result.fetchone()
+        return result.fetchone().bool
 
 
         
