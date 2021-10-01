@@ -322,7 +322,7 @@ def edit_message(thread_id, message_id):
         flash("Muokattu", "success")
         return redirect(f"/thread/{thread_id}")
 
-@app.route("/admin/<community_name>/<username>")
+@app.route("/admin/<community_name>/<username>", methods=["POST"])
 def admin(community_name, username):
 
     if not logged_in(session):
@@ -336,7 +336,7 @@ def admin(community_name, username):
     flash("Lisätty ylläpitäjä", "success")
     return redirect(f"/community/{community_name}")
 
-@app.route("/ban/<community_name>/<username>")
+@app.route("/ban/<community_name>/<username>", methods=["POST"])
 def ban(community_name, username):
 
     if not logged_in(session):
@@ -350,7 +350,7 @@ def ban(community_name, username):
     flash("Estetty käyttäjä", "success")
     return redirect(f"/community/{community_name}")
 
-@app.route("/leave/<community_name>")
+@app.route("/leave/<community_name>", methods=["POST"])
 def leave(community_name):
 
     if not logged_in(session):

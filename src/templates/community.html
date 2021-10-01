@@ -43,17 +43,17 @@
 
       {%if community.user_is_admin %}
 <div class="dropdown">
-    <button onclick="myFunctionC()" class="dropbtn">Estä käyttäjiä</button>
+    <button onclick="myFunctionC()" class="dropbtn">Käyttäjät</button>
     <div id="myDropdownC" class="dropdown-content">
       <input type="text" placeholder="Etsi..." id="myInputC" onkeyup="filterFunctionC()">
       {% for user in users %}
         {% if not user.admin and not user.banned %}
             <div>
-              <form action="/ban/{{community_name}}/{{user.username}}" method="POST">
+              <form action="/ban/{{community.name}}/{{user.username}}" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 {{user.username}} <button type="submit">Estä</button>
               </form>
-              <form action="/admin/{{community_name}}/{{user.username}}" method="POST">
+              <form action="/admin/{{community.name}}/{{user.username}}" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 {{user.username}} <button type="submit">Lisää ylläpitäjäksi</button>
               </form>
