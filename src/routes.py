@@ -100,6 +100,8 @@ def community(community_name):
 
     threads = communities_service.get_threads(community_name)
     users = communities_service.get_users(community_name)
+    community = communities_service.get_community(community_name, session["username"])
+    print(community.name)
     return render_template("community.html", community=community, threads=threads, users=users)
 
 @app.route("/join/<community_name>")
@@ -151,29 +153,29 @@ def thread(thread_id):
     if threads_service.user_is_banned(thread_id, session["username"]):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
-
+    
+    thread = threads_service.get_thread(thread_id, session["username"])
     messages = threads_service.get_messages(thread_id, session["username"])
     return render_template("thread.html", thread=thread, messages=messages)
 
 @app.route("/message/<int:thread_id>", methods=["POST"])
 def message(thread_id):
-
     if not logged_in(session):
         return redirect("/")
 
     content = request.form["content"]
 
-    
-
     if threads_service.user_is_banned(thread_id, session["username"]):
         flash("Olet estetty ketjun ryhmästä", "warning")
         return redirect("/")
+        
 
-    if validation_service.validate_message(content):
+    if not validation_service.validate_message(content):
         return redirect(f"/thread/{thread_id}")
 
     user = users_service.get_user_by_name(session["username"])
     threads_service.add_message(thread_id, user.id, content)
+
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/upvote/<int:thread_id>", methods=["POST"])
@@ -287,7 +289,7 @@ def edit_thread(thread_id):
 
 
 
-        if validation_service.validate_thread(new_title, new_content):
+        if not validation_service.validate_thread(new_title, new_content):
             return redirect(f"/edit/thread/{thread_id}")
     
         threads_service.edit_thread(thread_id, new_title, new_content)
@@ -301,7 +303,8 @@ def edit_message(thread_id, message_id):
         return redirect("/")
 
     if request.method == "GET":
-        message = messages_service.get_message(message_id)
+        message = messages_service.get_message(message_id, session["username"])
+        print(message)
         return render_template("edit_message.html", message=message, thread_id=thread_id)
 
     if request.method == "POST":

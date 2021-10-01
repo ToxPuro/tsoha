@@ -56,6 +56,12 @@
     </div>
 </div>
 
+<div>
+  <p>
+    {{thread.content}}
+  </p>
+</div>
+
 
 
 
@@ -102,9 +108,11 @@
             {{message.votes}}
             {% if message.is_users or thread.user_is_admin %}
             <form action="/delete/message/{{thread.id}}/{{message.id}}" method="POST" class="inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
               <button type="submit">Poista</button>
             </form>
-            <form action="/edit/message/{{thread.id}}/{{message.id}}" method="POST" class="inline">
+            <form action="/edit/message/{{thread.id}}/{{message.id}}" method="GET" class="inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
               <button type="submit">Muokkaa</button>
             </form>
             {% endif %}

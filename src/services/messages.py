@@ -31,7 +31,8 @@ class MessagesService:
         return self._messages_repository.get_message(message_id, user.id)
 
     def has_right_to_modify(self, thread_id, message_id, username):
-        thread = self._threads_repository.get_thread(thread_id, username)
+        user = self._users_repository.get_user_by_name(username)
+        thread = self._threads_repository.get_thread(thread_id, user.id)
         message = messages_service.get_message(message_id, username)
         return message.is_users or thread.user_is_admin
 

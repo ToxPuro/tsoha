@@ -36,7 +36,7 @@ class MessagesRepository:
         db.session.commit()
 
     def get_message(self, message_id, user_id):
-        sql = "SELECT content, thread_id, user_id, :user_id = user_id AS is_users from thread_messages WHERE id=:message_id"
+        sql = "SELECT content, thread_id, user_id, :user_id = user_id AS is_users, id from thread_messages WHERE id=:message_id"
         result =db.session.execute(sql, {"message_id" : message_id, "user_id": user_id})
         return result.fetchone()
 
