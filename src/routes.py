@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import redirect, render_template, request, session, flash
+from flask import redirect, render_template, request, session, flash, abort
 from flask_sqlalchemy import SQLAlchemy
 from services.users import users_service
 from services.communities import communities_service
@@ -10,10 +10,8 @@ from app import app
 from db import db
 
 def logged_in(session):
-    if not session:
-        return False
-    
-    if not "username" in session.keys():
+
+    if not session or not "username" in session.keys():
         return False
 
     return True
@@ -21,12 +19,9 @@ def logged_in(session):
 
 @app.route("/")
 def index():
-    if not session:
+    if not logged_in(session):
         return render_template("index.html")
-
-    if not "username" in session.keys():
-        return render_template("index.html")
-            
+          
     return redirect("/homepage")
 
 @app.route("/homepage")
@@ -125,6 +120,10 @@ def create_a_thread():
 
     if request.method == "GET":
         communities = communities_service.get_communities(session["username"])
+        communities = [community for community in communities if community.user_in]
+        if len(communities) == 0:
+            flash("Sinun täytyy liittyä ryhmään ennen ketjun luontia", "warning")
+            return redirect("/")
         return render_template("create_a_thread.html", communities=communities)
     if request.method == "POST":
 
@@ -355,10 +354,6 @@ def leave(community_name):
 
     if not logged_in(session):
         return redirect("/")
-
-    if not communities_service.user_is_admin(community_name, session["username"]):
-        flash(f"Sinun täytyy olla ryhmän {community_name} ylläpitäjä")
-        redirect("/community/{community_name}")
 
     communities_service.leave(community_name, session["username"])
     flash("Lähdetty ryhmästä", "success")

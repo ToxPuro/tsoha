@@ -40,7 +40,8 @@ class ThreadsService:
         self._threads_repository.edit_thread(thread_id, new_title, new_content)
 
     def has_right_to_modify(self, thread_id, username):
-        thread = self._threads_repository.get_thread(thread_id, username)
+        user = self._users_repository.get_user_by_name(username)
+        thread = self._threads_repository.get_thread(thread_id, user.id)
         return thread.is_users or thread.user_is_admin
 
     def user_is_banned(self, thread_id, username):
